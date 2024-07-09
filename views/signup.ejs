@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <%- include('include/include', { title: '회원가입' })%>
+  <body>
+    <h1>회원가입</h1>
+    <form name="form_register">
+      <label for="userid">ID</label>
+      <input id="userid" type="text" name="userid" required /><br />
+      <label for="password">Password</label>
+      <input id="password" type="password" name="pw" required /><br />
+      <label for="nickname">Name </label>
+      <input id="nickname" type="text" name="name" required /><br />
+      <button type="button" onclick="register();">Register</button>
+    </form>
+    <a href="/user/signin">Login</a>
+
+    <script>
+      function register() {
+        const form = document.forms['form_register'];
+
+        axios({
+          method: 'POST',
+          url: '/user/signup',
+          data:{
+            userid: form.userid.value,
+            pw: form.password.value,
+            name: form.nickname.value
+          }
+        }).then((res)=>{
+          console.log(res);
+          editCancel();
+        }).catch((error) => {
+          console.error('Error in register:', error);
+          if (error.response && error.response.data) {
+            alert(error.response.data.message);
+          }
+        });
+      }
+
+      function editCancel() {
+        const form = document.forms['form_register'];
+        form.userid.value = '';
+        form.password.value = '';
+        form.nickname.value = '';
+      }
+    </script>
+  </body>
+</html>
