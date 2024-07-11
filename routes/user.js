@@ -8,9 +8,15 @@ router.get('/signup', controller.signUp);
 
 router.post('/signup', controller.postsignUp);
 
-router.get('/signin', controller.signIn);
+router.get('/login', controller.logIn);
 
-router.post('/signin', controller.postsignIn);
+router.post('/login', controller.postlogIn);
+
+router.post('/logout', controller.logout);
+
+// router.get('/check-token', controller.checkToken);
+
+// 여기까진 체크완료 (postman 확인완료)
 
 router.post('/profile', controller.postProfile);
 
@@ -18,8 +24,6 @@ router.delete('/profile/delete', controller.deleteProfile);
 
 router.patch('/profile/edit', controller.patchProfile);
 
-router.get('/check-token', controller.checkToken);
 
-router.post('/logout', controller.logout);
 
 module.exports = router;
