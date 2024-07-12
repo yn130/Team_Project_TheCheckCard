@@ -7,50 +7,30 @@
       <label for="userid">ID</label>
       <input id="userid" type="text" name="userid" required /><br />
       <label for="password">Password</label>
-      <input id="password" type="password" name="password" required /><br />
+      <input id="password" type="password" name="pw" required /><br />
       <label for="nickname">Name </label>
-      <input id="nickname" type="text" name="nickname" required /><br />
+      <input id="nickname" type="text" name="name" required /><br />
       <button type="button" onclick="register();">Register</button>
     </form>
-    <a href="/user/login">Login</a>
+    <a href="/user/signin">Login</a>
 
     <script>
-      
-      function validatePassword(password) {
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            return passwordRegex.test(password);
-      }
-      // 비밀번호 유효한지 검증 -> front & backend 둘다 적용필요
-      // 프론트엔드에서는 사용자에게 즉각적인 피드백을 제공하고, 백엔드에서는 보안을 강화하여 신뢰할 수 없는 입력을 방지  
-
       function register() {
         const form = document.forms['form_register'];
-        const userId = form.userid.value;
-        const password = form.password.value;
-        const nickname = form.nickname.value;
-        
-        if (!validatePassword(password)) {
-          alert('비밀번호가 유효하지 않습니다. 최소 8자 이상, 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.');
-          return; 
-        }
-        //alert문 나중에 수정필요
-
 
         axios({
           method: 'POST',
           url: '/user/signup',
           data:{
-            userid: userId,
-            password: password,
-            nickname: nickname,
+            userid: form.userid.value,
+            pw: form.password.value,
+            name: form.nickname.value
           }
         }).then((res)=>{
           console.log(res);
-              editCancel();
-              window.location.href = '/user/login';
-          }).catch((error) => {
+          editCancel();
+        }).catch((error) => {
           console.error('Error in register:', error);
-          // error는 추후 커스텀후 작성 ( 지금 당장 생각 x )
           if (error.response && error.response.data) {
             alert(error.response.data.message);
           }
@@ -63,9 +43,6 @@
         form.password.value = '';
         form.nickname.value = '';
       }
-      // editCancel : 원래의 빈값으로 바꿔주는 용도
-
-      
     </script>
   </body>
 </html>
