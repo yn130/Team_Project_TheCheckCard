@@ -1,21 +1,27 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+module.exports = (sequelize, DataTypes) => {
 
-const Comment = sequelize.define('Comment', {
-  content: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  author: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  }, // 현재 로그인, 회원가입 안된경우에 사용 x
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  },
-}, {
-  timestamps: false,
-});
+  // 모델 정의
+  const Comment = sequelize.define('Comment', {
+    userid: {
+      type: DataTypes.INTEGER, 
+      allowNull: false,
+    },
+    comment_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    comment_contents: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+  }, {
+    tablename: 'Comment',
+    freezeTableName: true,
+    timestamps: true,
+    // 내보낼때 tablename을 안해주면 대소문자 구별이 안됨(필요)
+  });
 
-module.exports = Comment;
+  return Comment;
+};
