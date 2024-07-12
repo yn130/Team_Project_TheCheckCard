@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap");
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: "Montserrat", sans-serif;
+  background-color: black;
+  margin: 0;
+}
+
+.centered {
+  display: flex;
+  align-items: flex-start; /* 상단 정렬 */
+  justify-content: center;
+  gap: 13rem;
+  height: auto;
+  padding-top: 120px; /* 상단 여백 */
+  flex-direction: row; /* 기본 가로 나열 */
+}
+
+@media (max-width: 599px) {
+  .centered {
+    flex-direction: column;
+    gap: 2rem; /* 카드 사이의 간격을 조정할 수 있습니다 */
+  }
+}
+
+@media (min-width: 600px) {
+  .centered {
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 800px) {
+  .centered {
+    gap: 5rem;
+  }
+}
+
+@media (min-width: 1000px) {
+  .centered {
+    gap: 10rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .centered {
+    gap: 12rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .centered {
+    gap: 15rem;
+  }
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card {
+  position: relative;
+  height: auto;
+  width: 20rem;
+  aspect-ratio: 5/7;
+  color: #ffffff;
+  perspective: 50rem;
+  margin-bottom: 2rem; /* 카드 하단 여백 */
+}
+
+.card .shadow {
+  position: absolute;
+  inset: 0;
+  background: var(--url);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.8;
+  filter: blur(2rem) saturate(0.9);
+  box-shadow: 0 -1.5rem 2rem -0.5rem rgba(0, 0, 0, 0.7);
+  transform: rotateX(var(--rotateX)) rotateY(var(--rotateY)) translate3d(0, 2rem, -2rem);
+}
+
+.card .image {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent 40%), var(--url);
+  background-size: cover;
+  background-position: center;
+  -webkit-mask-image: var(--url);
+          mask-image: var(--url);
+  -webkit-mask-size: cover;
+          mask-size: cover;
+  -webkit-mask-position: center;
+          mask-position: center;
+}
+
+.card .image.background {
+  transform: rotateX(var(--rotateX)) rotateY(var(--rotateY)) translate3d(0, 0, 0rem);
+}
+
+.card .image.cutout {
+  transform: rotateX(var(--rotateX)) rotateY(var(--rotateY)) translate3d(0, 0, 4rem) scale(0.92);
+  z-index: 3;
+}
+
+.card .content {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  inset: 0;
+  padding: 3.5rem;
+  transform: rotateX(var(--rotateX)) rotateY(var(--rotateY)) translate3d(0, 0, 6rem);
+  z-index: 4;
+}
+
+.card::after, .card::before {
+  content: "";
+  position: absolute;
+  inset: 1.5rem;
+  border: #e2c044 0.5rem solid;
+  transform: rotateX(var(--rotateX)) rotateY(var(--rotateY)) translate3d(0, 0, 2rem);
+}
+
+.card::before {
+  z-index: 4;
+}
+
+.card.border-left-behind::before {
+  border-left: transparent;
+}
+
+.card.border-right-behind::before {
+  border-right: transparent;
+}
+
+.card.border-bottom-behind::before {
+  border-bottom: transparent;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 2rem rgba(0, 0, 0, 0.5);
+}
+
+p {
+  font-weight: 300;
+  text-shadow: 0 0 2rem rgba(0, 0, 0, 0.5);
+}
+
+/* 댓글 스타일 */
+.comments {
+  width: 100%; /* 카드와 동일한 폭을 가짐 */
+  margin-top: 1rem;
+}
+
+.comment {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.comment-header img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 0.5rem;
+}
+
+.comment-author {
+  font-weight: bold;
+  margin-right: auto;
+}
+
+.comment-options {
+  color: #888;
+  font-size: 0.875rem;
+}
+
+.comment-body {
+  margin-bottom: 0.5rem;
+}
+
+.comment-footer {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #888;
+    flex-wrap: nowrap; /* 이 속성을 추가하여 요소가 한 줄에 나오도록 함 */
+  }
+  
+.comment-footer span {
+margin-right: 1rem;
+white-space: nowrap; /* 이 속성을 추가하여 텍스트가 줄바꿈되지 않도록 함 */
+}
+
+.comment-action {
+color: #ff6666;
+cursor: pointer;
+white-space: nowrap; /* 이 속성을 추가하여 텍스트가 줄바꿈되지 않도록 함 */
+}
+    </style>
+    <!-- <link rel="stylesheet" href="./page2.css">
+    <script defer src="./page2.js"></script> -->
+    <title>Document</title>
+</head>
+<body>
+    <div class="centered">
+        <div class="card-container">
+            <div class="card" data-url="detail.html" style="--url: url('https://d1c5n4ri2guedi.cloudfront.net/card/2423/card_img/27142/2423card.png');">
+                <div class="shadow"></div>
+                <div class="image background"></div>
+                <div class="image cutout"></div>
+                <div class="content">
+                    <h2>노리2 체크카드(Global)</h2>
+                    <p>커피,모바일,문화10%할인.</p>
+                </div>
+            </div>
+            <div class="comments">
+                <div class="comment">
+                    <div class="comment-header">
+                        <img src="https://via.placeholder.com/40" alt="Profile Image">
+                        <div class="comment-author">코딩온 션</div>
+                        <div class="comment-options">써봤어요</div>
+                    </div>
+                    <div class="comment-body">
+                        누리2카드 미만 잡, 코딩온 대표도 쓰는 거 내가 봄.
+                    </div>
+                    <div class="comment-footer">
+                        <span class="likes">👍</span>
+                        <span class="comments">0</span>
+                        <span class="comment-action" data-likes="0">좋아요</span>
+                    </div>
+                </div>
+                <div class="comment">
+                    <div class="comment-header">
+                        <img src="https://via.placeholder.com/40" alt="Profile Image">
+                        <div class="comment-author">코딩온 데이먼</div>
+                        <div class="comment-options">쓰고 싶어요</div>
+                    </div>
+                    <div class="comment-body">
+                        쓰고 싶은데.. 대표랑 같은 카드 쓰기 싫음ㅠ
+                    </div>
+                    <div class="comment-footer">
+                        <span class="likes">👍</span>
+                        <span class="comments">0</span>
+                        <span class="comment-action" data-likes="0">좋아요</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-container">
+            <div class="card" data-url="detail.html" style="--url: url('https://d1c5n4ri2guedi.cloudfront.net/card/2422/card_img/27141/2422card.png');">
+                <div class="shadow"></div>
+                <div class="image background"></div>
+                <div class="image cutout"></div>
+                <div class="content">
+                    <h2>노리2 체크카드(KB Pay)</h2>
+                    <p>뷰티, 편의점5%할인.</p>
+                </div>
+            </div>
+            <div class="comments">
+                <div class="comment">
+                    <div class="comment-header">
+                        <img src="https://via.placeholder.com/40" alt="Profile Image">
+                        <div class="comment-author">코딩온 오올</div>
+                        <div class="comment-options">써봤어요</div>
+                    </div>
+                    <div class="comment-body">
+                        무식한새싹에게 치이는 매일 밤..편맥 때릴때 좋은 카드
+                    </div>
+                    <div class="comment-footer">
+                        <span class="likes">👍</span>
+                        <span class="comments">0</span>
+                        <span class="comment-action" data-likes="0">좋아요</span>
+                    </div>
+                </div>
+                <div class="comment">
+                    <div class="comment-header">
+                        <img src="https://via.placeholder.com/40" alt="Profile Image">
+                        <div class="comment-author">새싹 민석</div>
+                        <div class="comment-options">쓰고 싶어요</div>
+                    </div>
+                    <div class="comment-body">
+                        편의점을 항상 이용하는 새싹 무직러에게 빛과 같은 카드
+                    </div>
+                    <div class="comment-footer">
+                        <span class="likes">👍</span>
+                        <span class="comments">0</span>
+                        <span class="comment-action" data-likes="0">좋아요</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-container">
+            <div class="card" data-url="detail.html" style="--url: url('https://d1c5n4ri2guedi.cloudfront.net/card/528/card_img/21216/528card.png');">
+                <div class="shadow"></div>
+                <div class="image background"></div>
+                <div class="image cutout"></div>
+                <div class="content">
+                    <h2>라이언 치즈 체크카드</h2>
+                    <p>대중교통1.5%적립</p>
+                </div>
+            </div>
+            <div class="comments">
+                <div class="comment">
+                    <div class="comment-header">
+                        <img src="https://via.placeholder.com/40" alt="Profile Image">
+                        <div class="comment-author">코딩온 대표</div>
+                        <div class="comment-options">써봤어요</div>
+                    </div>
+                    <div class="comment-body">
+                        "정량"혜택은 다소 부족하지만.."정성"이 느껴지는 카드
+                    </div>
+                    <div class="comment-footer">
+                        <span class="likes">👍</span>
+                        <span class="comments">0</span>
+                        <span class="comment-action" data-likes="0">좋아요</span>
+                    </div>
+                </div>
+                <div class="comment">
+                    <div class="comment-header">
+                        <img src="https://via.placeholder.com/40" alt="Profile Image">
+                        <div class="comment-author">코딩온 이사</div>
+                        <div class="comment-options">쓰고 싶어요</div>
+                    </div>
+                    <div class="comment-body">
+                        대표님의 취향 저격 카드!
+                    </div>
+                    <div class="comment-footer">
+                        <span class="likes">👍</span>
+                        <span class="comments">0</span>
+                        <span class="comment-action" data-likes="0">좋아요</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const angle = 20;
+const rotateCard = window;
+
+const lerp = (start, end, amount) => {
+    return (1 - amount) * start + amount * end;
+};
+
+const remap = (value, oldMax, newMax) => {
+    const newValue = ((value + oldMax) * (newMax * 2)) / (oldMax * 2) - newMax;
+    return Math.min(Math.max(newValue, -newMax), newMax);
+};
+
+window.addEventListener("DOMContentLoaded", (event) => {
+    const cards = document.querySelectorAll(".card");
+
+    // addMousemoveListener 메서드
+    // 카드 위에서 마우스를 움직일 때 카드의 회전을 계산하여 적용
+    cards.forEach((e) => {        
+        e.addEventListener("mousemove", (event) => {
+            const rect = e.getBoundingClientRect();
+            const centerX = (rect.left + rect.right) / 2;
+            const centerY = (rect.top + rect.bottom) / 2;
+            const posX = event.pageX - centerX;
+            const posY = event.pageY - centerY;
+            const x = remap(posX, rect.width / 2, angle);
+            const y = remap(posY, rect.height / 2, angle);
+            e.dataset.rotateX = x;
+            e.dataset.rotateY = -y;
+        });
+
+        // addMouseoutListener 메서드
+        // 마우스가 카드에서 벗어날 때 카드의 회전을 초기화
+        e.addEventListener("mouseout", (event) => {
+            e.dataset.rotateX = 0;
+            e.dataset.rotateY = 0;
+        });
+
+        // 카드 클릭 이벤트 리스너 추가
+        // 카드를 클릭했을 때 data-url 속성에 지정된 URL로 이동
+        e.addEventListener("click", (event) => {
+            const url = e.getAttribute("data-url");
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    });
+
+    // updateCardRotation 메서드
+    // 카드의 회전 애니메이션을 업데이트
+    const update = () => {
+        cards.forEach((e) => {
+            let currentX = parseFloat(e.style.getPropertyValue('--rotateY').slice(0, -1));
+            let currentY = parseFloat(e.style.getPropertyValue('--rotateX').slice(0, -1));
+            if (isNaN(currentX)) currentX = 0;
+            if (isNaN(currentY)) currentY = 0;
+            const x = lerp(currentX, e.dataset.rotateX, 0.05);
+            const y = lerp(currentY, e.dataset.rotateY, 0.05);
+            e.style.setProperty("--rotateY", x + "deg");
+            e.style.setProperty("--rotateX", y + "deg");
+        })
+    }
+    setInterval(update, 1000 / 60);
+
+    // 좋아요 클릭 이벤트 추가
+    // 좋아요 버튼을 클릭했을 때 좋아요 수를 증가시킴
+    const likeButtons = document.querySelectorAll('.comment-action');
+    likeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const likesSpan = button.previousElementSibling;
+            let likes = parseInt(likesSpan.textContent);
+            likes++;
+            likesSpan.textContent = likes;
+            button.dataset.likes = likes; // data-likes 속성 업데이트
+        });
+    });
+
+    // 이모지 클릭 이벤트 추가
+    // 이모지 버튼을 클릭했을 때 댓글 숫자를 0으로 초기화
+    const emojiButtons = document.querySelectorAll('.likes');
+    emojiButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const commentsSpan = button.nextElementSibling;
+            commentsSpan.textContent = 0; // 댓글 숫자를 0으로 초기화
+        });
+    });
+
+    // addCommentClickListener 메서드
+    // 댓글 본문을 클릭했을 때 팝업창을 띄움
+    const addCommentClickListener = () => {
+        const comments = document.querySelectorAll('.comment-body');
+        comments.forEach(comment => {
+            comment.addEventListener('click', (event) => {
+                const popupWidth = window.innerWidth * 0.8;
+                const popupHeight = window.innerHeight * 0.8;
+                const popupLeft = (window.innerWidth - popupWidth) / 2;
+                const popupTop = (window.innerHeight - popupHeight) / 2;
+                window.open('comment', 'popup', `width=${popupWidth},height=${popupHeight},left=${popupLeft},top=${popupTop}`);
+            });
+        });
+    };
+
+    addCommentClickListener();  // 댓글 클릭 이벤트 리스너 추가 호출
+});
+
+</script>
+</html>
