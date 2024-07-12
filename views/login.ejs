@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <%- include('include/include', { title: '로그인' })%>
+<%- include('include/include', { title: '로그인' })%>
+
   <body>
-     <h1>로그인</h1>
-    
+    <h1>로그인</h1>
+
     <form name="form_info" action="/user/profile" method="POST">
       <input type="hidden" name="userid" />
     </form>
@@ -12,7 +13,7 @@
       <label for="userid">ID</label>
       <input id="userid" type="text" name="userid" required /><br />
       <label for="password">Password</label>
-      <input id="password" type="password" name="pw" required /><br />
+      <input id="password" type="password" name="password" required /><br />
       <button type="button" onclick="login();">Login</button>
     </form>
 
@@ -22,17 +23,21 @@
       // [Login] 버튼 클릭시 서버에 로그인 요청하기
       function login() {
         const form = document.forms['form_login'];
+        const userid = form.userid.value;
+        const password = form.password.value;
 
         axios({
           method: 'POST',
-          url: '/user/signin',
+          url: '/user/login',
           data: {
-            userid: form.userid.value,
-            pw: form.password.value
+            userid: userid,
+            password: password
           }
         }).then((res) => {
           console.log(res);
-          localStorage.setItem('token', res.data.token);
+
+          // localStorage.setItem('token', res.data.token);
+          // localstorage는 쿠키보다 보안에서 해줘야될게 많아서 서버에서 가능한 httponly가 있는 쿠키로 진행한다.
 
           const infoForm = document.forms['form_info'];
           infoForm.userid.value = form.userid.value;
@@ -44,6 +49,23 @@
           }
         });
       }
+
+      function logout() {
+        axios({
+          method: 'POST',
+          url: '/logout',
+          withCredentials: true 
+        }).then((res) => {
+          if (res.data.message === '로그아웃 성공') {
+            // 클라이언트 측 로그아웃 처리
+            console.log('로그아웃 성공');
+            window.location.href = '/login'; // 로그인 페이지로 리디렉션
+          }
+        }).catch((error) => {
+          console.error('Error in logout:', error);
+        });
+      }
     </script>
   </body>
+
 </html>
