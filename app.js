@@ -40,6 +40,7 @@ const commentRouter = require('./routes/comment');
 app.use('/user', userRouter);
 app.use('/comment', authenticateToken, commentRouter);
 
+
 app.get('/cardcomment', (req, res) => {
   res.render('card_comment')
 })
