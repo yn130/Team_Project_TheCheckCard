@@ -1,23 +1,92 @@
-<!DOCTYPE html>
 <html lang="ko">
-<%- include('include/include', { title: '로그인' })%>
+<head>
+  <meta charset="UTF-8">
+  <title>로그인</title>
+  <style>
+    body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: black;
+  }
+  fieldset {
+    border: 1px solid #ccc;
+    padding: 40px 20px; /* 패딩 조정 */
+    width: 500px;
+    height: 400px; 
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  legend {
+    font-size: 1.2em;
+    padding: 0 10px;
+    font-weight: bold;
+  }
+  .login {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  label {
+    margin-bottom: 5px;
+    width: 100%;
+  }
+  input[type="id"], input[type="password"] {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%; 
+    box-sizing: border-box; /* 패딩과 테두리를 너비에 포함 */
+  }
+  button {
+    padding: 15px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%; 
+    box-sizing: border-box; /* 패딩과 테두리를 너비에 포함 */
+  }
+  button:hover {
+    background-color: #333;
+  }
+  a {
+    display: block;
+    margin-top: 10px;
+    text-align: start;
+    color: black;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  </style>
+</head>
+<body>
 
-  <body>
-    <h1>로그인</h1>
+   <!-- <h1>로그인</h1> -->
 
     <form name="form_info" action="/user/profile" method="POST">
       <input type="hidden" name="userid" />
     </form>
-
+    <fieldset>
+      <legend></legend>
     <form name="form_login">
-      <label for="userid">ID</label>
-      <input id="userid" type="text" name="userid" required /><br />
-      <label for="password">Password</label>
+      <label for="userid">ID</label> <br>
+      <input id="userid" type="id" name="userid" required /><br />
+      <label for="password">Password</label> <br>
       <input id="password" type="password" name="password" required /><br />
       <button type="button" onclick="login();">Login</button>
     </form>
-
-    <a href="/user/signup">Register</a>
+  
+    <a href="./user/signup">회원가입</a>
+  </fieldset>
 
     <script>
       // [Login] 버튼 클릭시 서버에 로그인 요청하기
@@ -67,5 +136,4 @@
       }
     </script>
   </body>
-
 </html>

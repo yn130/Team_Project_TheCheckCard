@@ -1,71 +1,216 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <%- include('include/include', { title: '회원가입' })%>
-  <body>
-    <h1>회원가입</h1>
-    <form name="form_register">
-      <label for="userid">ID</label>
-      <input id="userid" type="text" name="userid" required /><br />
-      <label for="password">Password</label>
-      <input id="password" type="password" name="password" required /><br />
-      <label for="nickname">Name </label>
-      <input id="nickname" type="text" name="nickname" required /><br />
-      <button type="button" onclick="register();">Register</button>
-    </form>
-    <a href="/user/login">Login</a>
+<head>
+  <meta charset="UTF-8">
+  <title>회원가입</title>
+  <style>
+   
+   body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: white;
+  background-color: black;
+  margin: 0;
+}
 
-    <script>
-      
-      function validatePassword(password) {
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            return passwordRegex.test(password);
-      }
-      // 비밀번호 유효한지 검증 -> front & backend 둘다 적용필요
-      // 프론트엔드에서는 사용자에게 즉각적인 피드백을 제공하고, 백엔드에서는 보안을 강화하여 신뢰할 수 없는 입력을 방지  
+fieldset {
+  border: 1px solid #ccc;
+  padding: 30px;
+  width: 600px;
+  height: 450px; /* 높이를 조금 늘려 더 편안한 레이아웃을 제공 */
+  background-color: #000000;
+}
 
-      function register() {
-        const form = document.forms['form_register'];
-        const userId = form.userid.value;
-        const password = form.password.value;
-        const nickname = form.nickname.value;
+legend {
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.register {
+  width: 100%;
+}
+
+label {
+  margin-bottom: 10px;
+  width: 80px; /* 레이블 너비를 고정하여 글자가 잘리지 않도록 설정 */
+}
+
+input[type="text"], input[type="id"], input[type="password"] {
+  padding: 10px; /* 패딩을 조정하여 입력 창 크기를 조정 */
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: calc(100% - 150px); /* 너비를 레이블과 버튼에 맞게 조정 */
+  box-sizing: border-box;
+  background-color: transparent;
+  color: white;
+}
+
+.id-container, .nickname-container, .password-container {
+  display: flex;
+  align-items: center; /* 버튼과 입력창의 정렬을 가운데로 */
+  gap: 10px; /* 입력창과 버튼 사이의 간격을 조정 */
+}
+
+.id-container button, .nickname-container button {
+  padding: 10px; /* 패딩을 조정하여 버튼 크기를 조정 */
+  color: rgb(255, 255, 255);
+  background-color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100px; /* 버튼 너비를 동일하게 설정 */
+  box-sizing: border-box;
+  margin-top: 0; /* 버튼과 입력창의 수직 정렬을 조정 */
+}
+
+.register-button {
+  float: right;
+  margin-top: 30px; /* 가입 버튼과 상단 간격을 조정 */
+  width: 20%;
+}
+
+.id-container button:hover, .nickname-container button:hover {
+  background-color: black;
+  text-decoration: underline;
+}
+
+#nickname, #userid, #password {
+  padding: 10px; /* 패딩을 조정하여 입력창 크기를 조정 */
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: calc(100% - 150px); /* 너비를 동일하게 설정 */
+  box-sizing: border-box;
+}
+
+#password {
+  width: calc(100% - 190px); 
+}
+
+#nickname-check-result, #id-check-result {
+  font-size: 0.7em;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 10px;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 20%;
+  box-sizing: border-box;
+}
+
+button:hover {
+  background-color: #fdfdfd;
+}
+
+a {
+  display: block;
+  margin-top: 20px;
+  text-align: start;
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+  </style>
+  
+</head>
+<body>
+  <div class="container">
+    <fieldset>
+      <legend>회원가입</legend>
+      <form name="form_register" class="register" enctype="multipart/form-data">
+        <div class="input-container">
+           <div class="nickname-container">
+            <label for="nickname">⠀닉네임⠀</label>
+            <input id="nickname" type="text" name="nickname" required />
+            <button type="button" onclick="checkDuplicateNickname()">중복 확인</button>
+          </div>
+          <div class="id-container">
+            <label for="userid">⠀아이디⠀</label>
+            <input id="userid" type="id" name="userid" required />
+            <button type="button" onclick="checkDuplicateId()">중복 확인</button>
+          </div>
+          <p id="id-check-result"></p>
+          <div class="password-container">
+            <label for="password">비밀번호</label>
+            <input id="password" type="password" name="password" required />
+          </div>
+        </div>
         
-        if (!validatePassword(password)) {
-          alert('비밀번호가 유효하지 않습니다. 최소 8자 이상, 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.');
-          return; 
+        <button type="button" onclick="register();" class="register-button">가입</button>
+      </form>
+      <a href="./user/login">로그인</a>
+    </fieldset>
+  </div>
+  <script>
+    function previewProfilePicture() {
+      const file = document.getElementById("profile_picture").files[0];
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        document.getElementById("profile-preview").src = reader.result;
+      }
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function validatePassword(password) {
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      return passwordRegex.test(password);
+    }
+
+    function register() {
+      const form = document.forms['form_register'];
+      const userId = form.userid.value;
+      const password = form.password.value;
+      const nickname = form.nickname.value;
+
+      if (!validatePassword(password)) {
+        alert('비밀번호가 유효하지 않습니다. 최소 8자 이상, 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.');
+        return;
+      }
+
+      axios({
+        method: 'POST',
+        url: '/user/signup',
+        data: {
+          userid: userId,
+          password: password,
+          nickname: nickname,
         }
-        //alert문 나중에 수정필요
+      }).then((res) => {
+        console.log(res);
+        editCancel();
+        window.location.href = '/user/login';
+      }).catch((error) => {
+        console.error('Error in register:', error);
+        if (error.response && error.response.data) {
+          alert(error.response.data.message);
+        }
+      });
+    }
 
+    function editCancel() {
+      const form = document.forms['form_register'];
+      form.userid.value = '';
+      form.password.value = '';
+      form.nickname.value = '';
+    }
 
-        axios({
-          method: 'POST',
-          url: '/user/signup',
-          data:{
-            userid: userId,
-            password: password,
-            nickname: nickname,
-          }
-        }).then((res)=>{
-          console.log(res);
-              editCancel();
-              window.location.href = '/user/login';
-          }).catch((error) => {
-          console.error('Error in register:', error);
-          // error는 추후 커스텀후 작성 ( 지금 당장 생각 x )
-          if (error.response && error.response.data) {
-            alert(error.response.data.message);
-          }
-        });
-      }
-
-      function editCancel() {
-        const form = document.forms['form_register'];
-        form.userid.value = '';
-        form.password.value = '';
-        form.nickname.value = '';
-      }
-      // editCancel : 원래의 빈값으로 바꿔주는 용도
-
-      
-    </script>
-  </body>
+     // editCancel : 원래의 빈값으로 바꿔주는 용도
+  
+  </script>
+</body>
 </html>
