@@ -1,12 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const commentController = require('../controllers/CComment');
+const commentController = require('../controller/CComment');
 
+// 댓글 페이지 보여주기
+router.get('/', commentController.showComments);
 
-router.get('/comments', commentController.getComment);
-router.get('/comments',commentController.getComments);
-router.post('/comment/post', commentController.createComment);
-router.patch('/comment/update', commentController.updateComment);
-router.delete('/comment', commentController.deleteComment);
+// 댓글 추가하기
+router.post('/', commentController.addComment);
+
+// 댓글 수정하기
+router.patch('/edit/:id', commentController.editComment);
+
+// 댓글 삭제하기
+router.delete('/delete/:id', commentController.deleteComment);
 
 module.exports = router;
