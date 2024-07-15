@@ -22,7 +22,6 @@ sequelize.sync();
 const userRouter = require('./routes/user');
 app.use('/user', userRouter);
 
-
 // 404 에러 처리
 app.get('*', (req, res) => {
   res.render('404');
