@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>회원가입</title>
-  <style>
-   
-   body {
+<HTML>
+  <!DOCTYPE html>
+  <html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <style>
+      body {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,7 +19,7 @@ fieldset {
   border: 1px solid #ccc;
   padding: 30px;
   width: 600px;
-  height: 450px; /* 높이를 조금 늘려 더 편안한 레이아웃을 제공 */
+  height: 450px;
   background-color: #000000;
 }
 
@@ -36,15 +36,20 @@ legend {
 
 label {
   margin-bottom: 10px;
-  width: 80px; /* 레이블 너비를 고정하여 글자가 잘리지 않도록 설정 */
+  width: 80px;
+  margin-top: -10px; 
+}
+
+.input-container {
+  margin-top: 30px; 
 }
 
 input[type="text"], input[type="id"], input[type="password"] {
-  padding: 10px; /* 패딩을 조정하여 입력 창 크기를 조정 */
+  padding: 10px;
   margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: calc(100% - 150px); /* 너비를 레이블과 버튼에 맞게 조정 */
+  width: calc(100% - 150px);
   box-sizing: border-box;
   background-color: transparent;
   color: white;
@@ -52,25 +57,25 @@ input[type="text"], input[type="id"], input[type="password"] {
 
 .id-container, .nickname-container, .password-container {
   display: flex;
-  align-items: center; /* 버튼과 입력창의 정렬을 가운데로 */
-  gap: 10px; /* 입력창과 버튼 사이의 간격을 조정 */
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .id-container button, .nickname-container button {
-  padding: 10px; /* 패딩을 조정하여 버튼 크기를 조정 */
-  color: rgb(255, 255, 255);
+  padding: 10px;
+  color: white;
   background-color: black;
-  border: none;
   border-radius: 5px;
   cursor: pointer;
-  width: 100px; /* 버튼 너비를 동일하게 설정 */
+  width: 100px;
   box-sizing: border-box;
-  margin-top: 0; /* 버튼과 입력창의 수직 정렬을 조정 */
+  margin-top: -20px; /* 버튼을 더 위로 이동 */
 }
 
 .register-button {
   float: right;
-  margin-top: 30px; /* 가입 버튼과 상단 간격을 조정 */
+  margin-top: 30px;
   width: 20%;
 }
 
@@ -79,17 +84,22 @@ input[type="text"], input[type="id"], input[type="password"] {
   text-decoration: underline;
 }
 
-#nickname, #userid, #password {
-  padding: 10px; /* 패딩을 조정하여 입력창 크기를 조정 */
+#nickname, #userid {
+  padding: 10px;
   margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: calc(100% - 150px); /* 너비를 동일하게 설정 */
+  width: calc(100% - 150px);
   box-sizing: border-box;
 }
 
 #password {
-  width: calc(100% - 190px); 
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: calc(100% - 190px);
+  box-sizing: border-box;
 }
 
 #nickname-check-result, #id-check-result {
@@ -123,94 +133,104 @@ a {
 a:hover {
   text-decoration: underline;
 }
-  </style>
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <fieldset>
+        <legend>회원가입</legend>
+        <form name="form_register" class="register" enctype="multipart/form-data">
+          <div class="input-container">
+            <div class="nickname-container">
+              <label for="nickname">닉네임⠀</label>
+              <input id="nickname" type="text" name="nickname" placeholder="nickname" required />
+              <button type="button" onclick="checkDuplicateNickname()">중복 확인</button>
+            </div>
+            <div class="id-container">
+              <label for="userid">아이디</label>
+              <input id="userid" type="id" name="userid" placeholder="ID" required />
+              <button type="button" onclick="checkDuplicateId()">중복 확인</button>
+            </div>
+            <p id="id-check-result"></p>
+            <div class="password-container">
+              <label for="password">비밀번호⠀</label>
+              <input id="password" type="password" name="password" placeholder="password" required />
+            </div>
+          </div>
+          <button type="button" onclick="register();" class="register-button">가입</button>
+        </form>
+        <a href="./user/login">로그인</a>
+      </fieldset>
+    </div>
+    <script>
+    
+      function validatePassword(password) {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return passwordRegex.test(password);
+      }
+
+      function checkDuplicateNickname() {
+      const nickname = document.getElementById('nickname').value;
+      axios.post('/user/check-nickname', { nickname: nickname })
+        .then(response => {
+          document.getElementById('nickname-check-result').textContent = response.data.message;
+        })
+        .catch(error => {
+          document.getElementById('nickname-check-result').textContent = '오류가 발생했습니다.';
+        });
+    }
+
+    function checkDuplicateId() {
+      const userId = document.getElementById('userid').value;
+      axios.post('/user/check-id', { userid: userId })
+        .then(response => {
+          document.getElementById('id-check-result').textContent = response.data.message;
+        })
+        .catch(error => {
+          document.getElementById('id-check-result').textContent = '오류가 발생했습니다.';
+        });
+    }
   
-</head>
-<body>
-  <div class="container">
-    <fieldset>
-      <legend>회원가입</legend>
-      <form name="form_register" class="register" enctype="multipart/form-data">
-        <div class="input-container">
-           <div class="nickname-container">
-            <label for="nickname">⠀닉네임⠀</label>
-            <input id="nickname" type="text" name="nickname" required />
-            <button type="button" onclick="checkDuplicateNickname()">중복 확인</button>
-          </div>
-          <div class="id-container">
-            <label for="userid">⠀아이디⠀</label>
-            <input id="userid" type="id" name="userid" required />
-            <button type="button" onclick="checkDuplicateId()">중복 확인</button>
-          </div>
-          <p id="id-check-result"></p>
-          <div class="password-container">
-            <label for="password">비밀번호</label>
-            <input id="password" type="password" name="password" required />
-          </div>
-        </div>
-        
-        <button type="button" onclick="register();" class="register-button">가입</button>
-      </form>
-      <a href="./user/login">로그인</a>
-    </fieldset>
-  </div>
-  <script>
-    function previewProfilePicture() {
-      const file = document.getElementById("profile_picture").files[0];
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        document.getElementById("profile-preview").src = reader.result;
-      }
-      if (file) {
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function validatePassword(password) {
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-      return passwordRegex.test(password);
-    }
-
-    function register() {
-      const form = document.forms['form_register'];
-      const userId = form.userid.value;
-      const password = form.password.value;
-      const nickname = form.nickname.value;
-
-      if (!validatePassword(password)) {
-        alert('비밀번호가 유효하지 않습니다. 최소 8자 이상, 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.');
-        return;
-      }
-
-      axios({
-        method: 'POST',
-        url: '/user/signup',
-        data: {
-          userid: userId,
-          password: password,
-          nickname: nickname,
-        }
-      }).then((res) => {
-        console.log(res);
-        editCancel();
-        window.location.href = '/user/login';
-      }).catch((error) => {
-        console.error('Error in register:', error);
-        if (error.response && error.response.data) {
-          alert(error.response.data.message);
-        }
-      });
-    }
-
-    function editCancel() {
-      const form = document.forms['form_register'];
-      form.userid.value = '';
-      form.password.value = '';
-      form.nickname.value = '';
-    }
-
-     // editCancel : 원래의 빈값으로 바꿔주는 용도
+      function register() {
+        const form = document.forms['form_register'];
+        const userId = form.userid.value;
+        const password = form.password.value;
+        const nickname = form.nickname.value;
   
-  </script>
-</body>
-</html>
+        if (!validatePassword(password)) {
+          alert('비밀번호가 유효하지 않습니다. 최소 8자 이상, 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.');
+          return;
+        }
+  
+        axios({
+          method: 'POST',
+          url: '/user/signup',
+          data: {
+            userid: userId,
+            password: password,
+            nickname: nickname,
+          }
+        }).then((res) => {
+          console.log(res);
+          editCancel();
+          window.location.href = '/user/login';
+        }).catch((error) => {
+          console.error('Error in register:', error);
+          if (error.response && error.response.data) {
+            alert(error.response.data.message);
+          }
+        });
+      }
+  
+      function editCancel() {
+        const form = document.forms['form_register'];
+        form.userid.value = '';
+        form.password.value = '';
+        form.nickname.value = '';
+      }
+  
+       // editCancel : 원래의 빈값으로 바꿔주는 용도
+    
+    </script>
+  </body>
+  </html>
