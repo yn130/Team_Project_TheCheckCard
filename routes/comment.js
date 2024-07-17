@@ -1,17 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const commentController = require('../controller/CComment');
+const authenticateToken = require('../middleware/token');
 
 // 댓글 페이지 보여주기
-router.get('/', commentController.showComments);
+router.get('/', authenticateToken, commentController.showComments);
 
 // 댓글 추가하기
-router.post('/', commentController.addComment);
+router.post('/', authenticateToken, commentController.addComment);
 
 // 댓글 수정하기
-router.patch('/edit/:id', commentController.editComment);
+router.patch('/edit/:id', authenticateToken, commentController.editComment);
 
 // 댓글 삭제하기
-router.delete('/delete/:id', commentController.deleteComment);
+router.delete('/delete/:id', authenticateToken, commentController.deleteComment);
+
+// 댓글 좋아요 토글
+router.post('/like', authenticateToken, commentController.toggleLike);
 
 module.exports = router;

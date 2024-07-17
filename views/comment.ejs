@@ -91,10 +91,37 @@
     <div class="comment-form">
         <input type="text" id="comment-input" placeholder="댓글을 입력하세요">
         <span class="char-counter" id="char-counter">0</span>
-        <button id="add-comment">추가</button>
+        <button id="add-comment" data-card-id="<%= cardId %>">추가</button>
     </div>
+
+    <div id="top-comments-container">
+        <h3>Top Comments</h3>
+        <!-- 상위 댓글 목록이 여기에 추가됩니다 -->
+    </div>
+
     <div id="comments-container">
         <!-- 댓글 목록이 여기에 추가됩니다 -->
+        <% if (comments.length === 0) { %>
+            <div class="no-comments">아직 입력된 댓글이 없습니다.</div>
+        <% } else { %>
+            <% comments.forEach(comment => { %>
+                <div class="comment">
+                    <div class="comment-header">
+                        <img src="https://via.placeholder.com/40" alt="Profile Image">
+                        <div class="comment-author"><%= comment.User.nickname %></div>
+                        <div class="comment-options"><%= new Date(comment.createdAt).toLocaleDateString() %></div>
+                    </div>
+                    <div class="comment-body">
+                        <%= comment.comment_contents %>
+                    </div>
+                    <div class="comment-footer">
+                        <span class="likes">👍</span>
+                        <span class="comments">0</span>
+                        <span class="comment-action" data-likes="<%= comment.likes %>">좋아요</span>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
     </div>
     <div class="pagination" id="pagination">
         <!-- 페이지네이션 버튼들이 여기에 추가됩니다 -->
@@ -106,11 +133,16 @@
             const commentsContainer = document.getElementById('comments-container');
             const charCounter = document.getElementById('char-counter');
             const paginationContainer = document.getElementById('pagination');
-            const commentsPerPage = 10;
-            let currentPage = 1;
+            const commentsPerPage = 5; // 페이지에 보여줄 댓글 갯수 (5개)
+
+            let currentPage = <%= JSON.stringify(currentPage) %>;
             let comments = <%- JSON.stringify(comments) %>;
-            const user = <%- JSON.stringify(user) %>;
-            let totalPages = Math.ceil(comments.length / commentsPerPage);
+            let totalPages = <%= JSON.stringify(totalPages) %>;
+            let user = JSON.parse('<%- JSON.stringify(user)%>');
+
+            console.log('Initial comments:', comments); // 콘솔에 초기 댓글 출력
+            console.log('User:', user); // 콘솔에 사용자 정보 출력
+            console.log('Total pages:', totalPages); // 콘솔에 전체 페이지 수 출력
 
             // 글자 수 업데이트 함수
             const updateCharCount = () => {
@@ -120,7 +152,56 @@
             // 입력이 변경될 때 글자 수 업데이트
             commentInput.addEventListener('input', updateCharCount);
 
-            // 댓글 생성
+            // 댓글 추가 함수
+            const addComment = () => {
+                const text = commentInput.value.trim();
+                const cardId = addCommentButton.getAttribute('data-card-id');
+                if (!user) {
+                    alert('먼저 로그인을 해주세요');
+                    commentInput.value = '';
+                    return;
+                }
+                if (text) {
+                    fetch('/comment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${user.token}` // 토큰을 포함하여 요청을 보냄
+                        },
+                        body: JSON.stringify({ comment_contents: text, card_id: cardId })
+                    }).then(response => {
+                        if (response.ok) {
+                            response.json().then(newComment => {
+                                comments.push(newComment);
+                                totalPages = Math.ceil(comments.length / commentsPerPage);
+                                displayComments(currentPage);
+                                setupPagination(totalPages);
+                            });
+                            commentInput.value = '';
+                            updateCharCount(); // 댓글이 추가되면 글자 수 업데이트
+                        } else {
+                            alert('댓글 추가 실패.');
+                        }
+                    }).catch(error => {
+                        console.error('Error posting comment:', error);
+                        alert('댓글 추가 실패.');
+                    });
+                } else {
+                    alert('댓글을 입력하세요.');
+                }
+            };
+
+            // 댓글 추가 버튼 클릭 이벤트
+            addCommentButton.addEventListener('click', addComment);
+
+            // Enter 키로 댓글 추가 이벤트
+            commentInput.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                    addComment();
+                }
+            });
+
+            // 댓글 생성 함수
             const createComment = (comment) => {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
@@ -169,7 +250,7 @@
 
                 const likeButton = document.createElement('span');
                 likeButton.className = 'comment-action';
-                likeButton.innerHTML = '좋아요 <span class="thumb">👍</span>';
+                likeButton.innerHTML = '좋아요 <span class="thumb">:+1:</span>';
                 likeButton.addEventListener('click', (event) => {
                     if (event.target.classList.contains('thumb')) {
                         likesSpan.textContent = '0';
@@ -198,14 +279,15 @@
                     fetch(`/comment/edit/${comment.dataset.id}`, {
                         method: 'PATCH',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${user.token}` // 토큰을 포함하여 요청을 보냄
                         },
                         body: JSON.stringify({ comment_contents: newText })
                     }).then(response => {
                         if (response.ok) {
                             commentBody.textContent = newText;
                         } else {
-                            alert('Failed to edit comment.');
+                            alert('댓글 수정 실패.');
                         }
                     });
                 }
@@ -213,9 +295,12 @@
 
             // 댓글 삭제
             const deleteComment = (comment) => {
-                if (confirm('Are you sure you want to delete this comment?')) {
+                if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
                     fetch(`/comment/delete/${comment.dataset.id}`, {
-                        method: 'DELETE'
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${user.token}` // 토큰을 포함하여 요청을 보냄
+                        }
                     }).then(response => {
                         if (response.ok) {
                             comments = comments.filter(c => c.comment_id !== comment.dataset.id);
@@ -226,58 +311,11 @@
                             // 페이지 새로 고침
                             location.reload();
                         } else {
-                            alert('Failed to delete comment.');
+                            alert('댓글 삭제 실패.');
                         }
                     });
                 }
             };
-
-            // 댓글 추가 함수
-            const addComment = () => {
-                const text = commentInput.value.trim();
-                if (!user) {
-                    alert('먼저 로그인을 해주세요');
-                    commentInput.value = '';
-                    return;
-                }
-                if (text) {
-                    fetch('/comment', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ comment_contents: text })
-                    }).then(response => {
-                        if (response.ok) {
-                            response.json().then(newComment => {
-                                comments.push(newComment);
-                                totalPages = Math.ceil(comments.length / commentsPerPage);
-                                displayComments(currentPage);
-                                setupPagination(totalPages);
-                            });
-                            commentInput.value = '';
-                            updateCharCount(); // 댓글이 추가되면 글자 수 업데이트
-                        } else {
-                            alert('Failed to post comment.');
-                        }
-                    }).catch(error => {
-                        console.error('Error posting comment:', error);
-                        alert('Failed to post comment.');
-                    });
-                } else {
-                    alert('댓글을 입력하세요.');
-                }
-            };
-
-            // 댓글 추가 버튼 클릭 이벤트
-            addCommentButton.addEventListener('click', addComment);
-
-            // Enter 키로 댓글 추가 이벤트
-            commentInput.addEventListener('keyup', (event) => {
-                if (event.key === 'Enter') {
-                    addComment();
-                }
-            });
 
             // 댓글 표시 함수
             const displayComments = (page) => {

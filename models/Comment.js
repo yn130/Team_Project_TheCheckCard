@@ -16,6 +16,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    card_id: { // 카드 ID 외래 키 추가
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Card',
+        key: 'card_id'
+      }
+    }
   }, {
     tablename: 'Comment',
     freezeTableName: true,

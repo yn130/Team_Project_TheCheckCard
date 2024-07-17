@@ -1,139 +1,176 @@
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <title>로그인</title>
   <style>
-    body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: black;
-  }
-  fieldset {
-    border: 1px solid #ccc;
-    padding: 40px 20px; /* 패딩 조정 */
-    width: 500px;
-    height: 400px; 
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  legend {
-    font-size: 1.2em;
-    padding: 0 10px;
-    font-weight: bold;
-  }
-  .login {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-  label {
-    margin-bottom: 5px;
-    width: 100%;
-  }
-  input[type="id"], input[type="password"] {
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%; 
-    box-sizing: border-box; /* 패딩과 테두리를 너비에 포함 */
-  }
-  button {
-    padding: 15px;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-    width: 100%; 
-    box-sizing: border-box; /* 패딩과 테두리를 너비에 포함 */
-  }
-  button:hover {
-    background-color: #333;
-  }
-  a {
-    display: block;
-    margin-top: 10px;
-    text-align: start;
-    color: black;
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-  </style>
-</head>
-<body>
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: white;
+  background-color: black;
+  margin: 0;
+}
 
+fieldset {
+  border: 1px solid #ccc;
+  padding: 30px;
+  width: 500px;
+  background-color: #000000;
+}
+
+legend {
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: white;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+label {
+  color: white;
+  width: 100%;
+  margin-bottom: 5px; /* 레이블과 입력창 사이의 간격 조정 */
+}
+
+input[type="id"], input[type="password"] {
+  padding: 10px 10px 10px 40px; /* 패딩을 조정하여 아이콘 공간 확보 */
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: transparent;
+  color: white;
+}
+
+input#userid {
+  background-image: url('./image/user_id_아이콘.png'); /* 아이콘 경로 설정 */
+  background-size: 20px 20px; /* 아이콘 크기 설정 */
+  background-position: 10px center; /* 아이콘 위치 설정 */
+  background-repeat: no-repeat; /* 아이콘 반복 안함 */
+}
+
+input#password {
+  background-image: url('./image/password_아이콘.png'); /* 아이콘 경로 설정 */
+  background-size: 20px 20px; /* 아이콘 크기 설정 */
+  background-position: 10px center; /* 아이콘 위치 설정 */
+  background-repeat: no-repeat; /* 아이콘 반복 안함 */
+}
+
+button {
+  padding: 10px;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #fdfdfd;
+}
+
+a {
+  display: block;
+  margin-top: 20px;
+  text-align: start;
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
    <!-- <h1>로그인</h1> -->
 
-    <form name="form_info" action="/user/profile" method="POST">
-      <input type="hidden" name="userid" />
-    </form>
-    <fieldset>
-      <legend></legend>
+   <form name="form_info" action="/profile" method="POST">
+    <input type="hidden" name="userid" />
+  </form>
+  <fieldset>
+    <legend>Login</legend>
     <form name="form_login">
-      <label for="userid">ID</label> <br>
-      <input id="userid" type="id" name="userid" required /><br />
-      <label for="password">Password</label> <br>
-      <input id="password" type="password" name="password" required /><br />
+      <label for="userid">ID</label>
+      <input id="userid" type="id" name="userid" required />
+      <label for="password">Password</label>
+      <input id="password" type="password" name="password" required />
       <button type="button" onclick="login();">Login</button>
     </form>
-  
-    <a href="./user/signup">회원가입</a>
+
+    <a href="./signup">회원가입</a>
   </fieldset>
 
-    <script>
-      // [Login] 버튼 클릭시 서버에 로그인 요청하기
-      function login() {
+  <script>
+    // 서버에서 로그인 상태 확인
+    fetch('/user/checkLoginStatus')
+        .then(response => response.json())
+        .then(data => {
+            const loginButton = document.querySelector('.login-button');
+            loginButton.textContent = data.isLoggedIn ? 'Logout' : 'Login'; // 로그인 상태에 따라 버튼 텍스트 변경
+            loginButton.addEventListener('click', () => {
+                if (data.isLoggedIn) {
+                    logout(); // 로그아웃 함수 호출
+                } else {
+                    window.location.href = '/user/login';
+                }
+            });
+        });
+
+    // [Login] 버튼 클릭시 서버에 로그인 요청하기
+    function login() {
         const form = document.forms['form_login'];
         const userid = form.userid.value;
         const password = form.password.value;
 
         axios({
-          method: 'POST',
-          url: '/user/login',
-          data: {
-            userid: userid,
-            password: password
-          }
+            method: 'POST',
+            url: '/user/login',
+            data: {
+                userid: userid,
+                password: password
+            }
         }).then((res) => {
-          console.log(res);
-
-          // localStorage.setItem('token', res.data.token);
-          // localstorage는 쿠키보다 보안에서 해줘야될게 많아서 서버에서 가능한 httponly가 있는 쿠키로 진행한다.
-
-          const infoForm = document.forms['form_info'];
-          infoForm.userid.value = form.userid.value;
-          infoForm.submit();
+            console.log(res);
+            // 로그인 성공 시 /index로 리디렉션
+            window.location.href = '/index';
         }).catch((error) => {
-          console.error('Error in login:', error);
-          if (error.response && error.response.data) {
-            alert(error.response.data.message);
-          }
+            console.error('Error in login:', error);
+            if (error.response && error.response.data) {
+                alert(error.response.data.message);
+            }
         });
-      }
+    }
 
-      function logout() {
+    // 로그아웃 함수
+    function logout() {
         axios({
-          method: 'POST',
-          url: '/logout',
-          withCredentials: true 
+            method: 'POST',
+            url: '/user/logout', 
+            withCredentials: true 
         }).then((res) => {
-          if (res.data.message === '로그아웃 성공') {
-            // 클라이언트 측 로그아웃 처리
-            console.log('로그아웃 성공');
-            window.location.href = '/login'; // 로그인 페이지로 리디렉션
-          }
+            if (res.data.message === '로그아웃 성공') {
+                console.log('로그아웃 성공');
+                window.location.href = '/user/login';
+            }
         }).catch((error) => {
-          console.error('Error in logout:', error);
+            console.error('Error in logout:', error);
         });
-      }
-    </script>
-  </body>
+    }
+  </script>
+</body>
 </html>
