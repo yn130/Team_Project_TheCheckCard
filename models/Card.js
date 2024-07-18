@@ -15,8 +15,8 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         card_image: {
-            type: DataTypes.BLOB('long'),
-            allowNull: true // 임시 허용해둠! 
+            type: DataTypes.STRING(500), // URL을 저장할 수 있도록 BLOB 대신 VARCHAR로 변경
+            allowNull: true
         },
         card_traffic: {
             type: DataTypes.STRING(40),
