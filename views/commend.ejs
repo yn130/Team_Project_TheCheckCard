@@ -196,51 +196,111 @@
 
            .comments {
                width: 200px; /* 작은 화면에서 댓글 박스 크기 조정 */
-               margin-top: 20px; /* 작은 화면에서 카드와 댓글 사이의 간격 */
+               margin-top: 30px; /* 작은 화면에서 카드와 댓글 사이의 간격 */
            }
+       }
+
+       /* 모달 창 CSS 추가 */
+       .modal {
+           display: none;
+           position: fixed;
+           z-index: 1;
+           left: 0;
+           top: 0;
+           width: 100%;
+           height: 100%;
+           overflow: auto;
+           background-color: rgb(0, 0, 0);
+           background-color: rgba(0, 0, 0, 0.4);
+       }
+
+       .modal-content {
+            background-color: #000000;
+            margin: 15% auto;
+            padding: 20px;
+            border: none;
+            width: 80%;
+            border-radius: 10px;
+            height: 80vh;
+            opacity: 0.82; /* 투명도 설정 */
+        }
+
+       .close {
+           color: #aaa;
+           float: right;
+           font-size: 28px;
+           font-weight: bold;
+       }
+
+       .close:hover,
+       .close:focus {
+           color: black;
+           text-decoration: none;
+           cursor: pointer;
+       }
+
+       #comment-iframe {
+           width: 100%;
+           height: 78vh;
        }
     </style>
 </head>
 <body>
     <div id="container">
-      <% cards.forEach(card => { %>
-        <div id="top">
-            <div class="perspective">
-                <div class="card" id="card1">
-                  <!-- 카드 이미지 여기서 수정  -->
-                    <div class="thumb" data-url="/detail/<%= card.card_id %>"  style="background-image: url(https://images.unsplash.com/photo-1478358161113-b0e11994a36b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a11da19e81415e5a81029aade9df7774&auto=format&fit=crop&w=668&q=80)"></div>
-                    <h2><%= card.card_name %></h2>
-                    <span><%= card[`card_${category}`] %></span>
-                </div>
-                <div class="comments">
-                    <% if (card.comments && card.comments.length > 0) { %>
-                        <% card.comments.forEach(comment => { %>
-                        <div class="comment">
-                            <div class="comment-header">
-                                <img src="https://via.placeholder.com/40" alt="Profile Image">
-                                <div class="comment-author"><%= comment.User.nickname %></div>
-                                <div class="comment-options"><%= comment.createdAt.toLocaleDateString() %></div>
+        <% cards.forEach(card => { %>
+            <div id="top">
+                <div class="perspective">
+                    <div class="card" id="card1">
+                        <!-- 카드 이미지 여기서 수정  -->
+                        <div class="thumb" data-url="/detail/<%= card.card_id %>" style="background-image: url(https://images.unsplash.com/photo-1478358161113-b0e11994a36b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a11da19e81415e5a81029aade9df7774&auto=format&fit=crop&w=668&q=80)"></div>
+                        <h2><%= card.card_name %></h2>
+                        <span><%= card[`card_${category}`] %></span>
+                    </div>
+                    <div class="comments">
+                        <% if (card.comments && card.comments.length > 0) { %>
+                            <!-- 상위 2개의 댓글만 가져오기 -->
+                            <% card.comments.slice(0, 2).forEach((comment, index) => { %>
+                            <div class="comment">
+                                <div class="comment-header">
+                                    <% if (index === 0) { %>
+                                        <span style="font-size: 40px;">🥇</span>
+                                    <% } else if (index === 1) { %>
+                                        <span style="font-size: 40px;">🥈</span>
+                                    <% } else { %>
+                                        <img src="https://via.placeholder.com/40" alt="Profile Image">
+                                    <% } %>
+                                    <div class="comment-author"><%= comment.User.nickname %></div>
+                                    <div class="comment-options"><%= comment.createdAt.toLocaleDateString() %></div>
+                                </div>
+                                <div class="comment-body" data-card-id="<%= card.card_id %>" data-comment-id="<%= comment.comment_id %>">
+                                    <%= comment.comment_contents %>
+                                </div>
+                                <div class="comment-footer">
+                                    <span class="likes">🔥</span> <!-- 좋아요 수를 나타내는 부분 -->
+                                    <span class="comments"><%= comment.dataValues.likeCount %></span> <!-- 댓글 수를 나타내는 부분 (현재 고정 값) -->
+                                    <span class="comment-action" data-likes="<%= comment.dataValues.likeCount %>">좋아요</span>
+                                </div>
                             </div>
-                            <div class="comment-body" data-card-id="<%= card.card_id %>" data-comment-id="<%= comment.comment_id %>">
-                                <%= comment.comment_contents %>
+                            <% }) %>
+                        <% } else { %>
+                            <div class="no-comments" data-url="/comment?card_id=<%= card.card_id %>">
+                                아직 입력된 댓글이 없습니다. 댓글 작성하기
                             </div>
-                            <div class="comment-footer">
-                                <span class="likes">👍</span>
-                                <span class="comments">0</span>
-                                <span class="comment-action" data-likes="<%= comment.likes %>">좋아요</span>
-                            </div>
-                        </div>
-                        <% }) %>
-                    <% } else { %>
-                        <div class="no-comments">
-                            아직 입력된 댓글이 없습니다. <a href="/comment?card_id=<%= card.card_id %>">댓글 작성하기</a>
-                        </div>
-                    <% } %>
+                        <% } %>
+                    </div>
                 </div>
             </div>
-        </div>
-      <% }) %>        
+        <% }) %>        
     </div>
+
+    <!-- 모달 창 HTML 추가 -->
+    <div id="comment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <iframe id="comment-iframe" src="" frameborder="0"></iframe>
+        </div>
+    </div>
+
     <script>
         function addCardMovement() {
             $('.card').on("mousemove", function(t) {
@@ -256,6 +316,37 @@
         // 모든 카드에 이벤트 리스너 추가
         addCardMovement();
 
+        // 모달 창 열기
+        const openModal = (url) => {
+            const modal = document.getElementById("comment-modal");
+            const iframe = document.getElementById("comment-iframe");
+            iframe.src = url;
+            modal.style.display = "block";
+        };
+
+        // 모달 창 닫기
+        const closeModal = () => {
+            const modal = document.getElementById("comment-modal");
+            modal.style.display = "none";
+            location.reload(); // 모달 창 닫을 때 페이지 새로고침
+        };
+
+        // 이벤트 리스너 추가
+        document.querySelectorAll('.comment-body').forEach(comment => {
+            comment.addEventListener('click', (event) => {
+                const cardId = comment.getAttribute('data-card-id');
+                openModal(`/comment?card_id=${cardId}`);
+            });
+        });
+
+        document.querySelector('.close').addEventListener('click', closeModal);
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById("comment-modal");
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
         window.addEventListener("DOMContentLoaded", (event) => {
             const cards = document.querySelectorAll(".thumb");
             cards.forEach((e) => { 
@@ -269,22 +360,16 @@
                 });
             });
 
-            // 댓글 본문을 클릭했을 때 팝업창을 띄움
-            const addCommentClickListener = () => {
-                const comments = document.querySelectorAll('.comment-body');
-                comments.forEach(comment => {
-                    comment.addEventListener('click', (event) => {
-                        const cardId = comment.getAttribute('data-card-id');
-                        const popupWidth = window.innerWidth * 0.8;
-                        const popupHeight = window.innerHeight * 0.8;
-                        const popupLeft = (window.innerWidth - popupWidth) / 2;
-                        const popupTop = (window.innerHeight - popupHeight) / 2;
-                        window.open(`/comment?card_id=${cardId}`, 'popup', `width=${popupWidth},height=${popupHeight},left=${popupLeft},top=${popupTop}`);
-                    });
+            // 새롭게 추가된 코드: .no-comments 요소 클릭 이벤트 리스너
+            const noComments = document.querySelectorAll('.no-comments');
+            noComments.forEach(noComment => {
+                noComment.addEventListener('click', (event) => {
+                    const url = noComment.getAttribute("data-url");
+                    if (url) {
+                        openModal(url);
+                    }
                 });
-            };
-
-            addCommentClickListener();  // 댓글 클릭 이벤트 리스너 추가 호출
+            });
         });
     </script>
 </body>
