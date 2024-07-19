@@ -125,10 +125,17 @@
 
         setTimeout(render, timeout);
     }
-    // p 요소에 클릭 이벤트 리스너 추가
-    p.addEventListener('click', () => {
+    // 브라우저의 어느 곳을 클릭해도 페이지 이동 이벤트 추가
+    document.body.addEventListener('click', () => {
         window.location.href = '/index';
     });
     setTimeout(render, 500);
+
+    // 엔터 키로 페이지 이동 이벤트 추가
+    document.addEventListener('keyup', (event) => {
+        if (event.key === 'Enter') {
+            window.location.href = '/index';
+        }
+    });
 </script>
 </html>
