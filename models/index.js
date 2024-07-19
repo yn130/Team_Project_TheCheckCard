@@ -14,9 +14,11 @@ const User = require('./User')(sequelize, Sequelize);
 const Comment = require('./Comment')(sequelize, Sequelize); 
 const Card = require('./Card')(sequelize, Sequelize); 
 const CardLike = require('./CardLike')(sequelize, Sequelize); 
-const CommentLike = require('./CommentLike')(sequelize, Sequelize); // 여기 수정
+const CommentLike = require('./commentLike')(sequelize, Sequelize); 
 
-// 모델간 관계 연결 // 유저 1 : 댓글 N
+// 모델간 관계 연결 
+
+// 유저 1 : 댓글 N
 User.hasMany(Comment, {
   onDelete: 'CASCADE', 
   onUpdate: 'CASCADE',
@@ -76,6 +78,16 @@ Card.hasMany(Comment, {
 });
 Comment.belongsTo(Card, {
   foreignKey: 'card_id'
+});
+
+// 댓글 1 : 댓글좋아요 N
+Comment.hasMany(CommentLike, {
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+  foreignKey: 'comment_id'
+});
+CommentLike.belongsTo(Comment, {
+  foreignKey: 'comment_id'
 });
 
 db.sequelize = sequelize;

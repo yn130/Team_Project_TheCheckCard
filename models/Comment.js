@@ -5,6 +5,10 @@ module.exports = (sequelize, DataTypes) => {
     userid: {
       type: DataTypes.INTEGER, 
       allowNull: false,
+      references: {
+        model: 'User',
+        key: 'id'
+    }
     },
     comment_id: {
       type: DataTypes.INTEGER,

@@ -21,7 +21,15 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'Comment',
                 key: 'comment_id'
             }
-        }
+        },
+        card_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+              model: 'Card',
+              key: 'card_id'
+            }
+          }
     }, {
         tablename: 'CommentLike',
         freezeTableName: true,
