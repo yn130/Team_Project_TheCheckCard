@@ -34,35 +34,41 @@ form {
   align-items: center;
 }
 
+.label-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
 label {
   color: white;
+  margin-right: 10px;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
   width: 100%;
-  margin-bottom: 5px; /* 레이블과 입력창 사이의 간격 조정 */
+  position: relative;
 }
 
 input[type="id"], input[type="password"] {
-  padding: 10px 10px 10px 40px; /* 패딩을 조정하여 아이콘 공간 확보 */
-  margin-bottom: 20px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   width: 100%;
   box-sizing: border-box;
   background-color: transparent;
   color: white;
+  padding-left: 40px; /* 아이콘 공간 확보를 위해 왼쪽 패딩 추가 */
 }
 
-input#userid {
-  background-image: url('./image/user_id_아이콘.png'); /* 아이콘 경로 설정 */
-  background-size: 20px 20px; /* 아이콘 크기 설정 */
-  background-position: 10px center; /* 아이콘 위치 설정 */
-  background-repeat: no-repeat; /* 아이콘 반복 안함 */
-}
-
-input#password {
-  background-image: url('./image/password_아이콘.png'); /* 아이콘 경로 설정 */
-  background-size: 20px 20px; /* 아이콘 크기 설정 */
-  background-position: 10px center; /* 아이콘 위치 설정 */
-  background-repeat: no-repeat; /* 아이콘 반복 안함 */
+img.icon {
+  position: absolute;
+  left: 10px;
+  width: 15px;
+  height: 15px;
 }
 
 button {
@@ -78,7 +84,7 @@ button {
 }
 
 button:hover {
-  background-color: #fdfdfd;
+  background-color: #3D0402;
 }
 
 a {
@@ -97,7 +103,6 @@ a:hover {
 </head>
 
 <body>
-   <!-- <h1>로그인</h1> -->
 
    <form name="form_info" action="/profile" method="POST">
     <input type="hidden" name="userid" />
@@ -105,14 +110,24 @@ a:hover {
   <fieldset>
     <legend>Login</legend>
     <form name="form_login">
-      <label for="userid">ID</label>
-      <input id="userid" type="id" name="userid" required />
-      <label for="password">Password</label>
-      <input id="password" type="password" name="password" required />
+      <div class="label-wrapper">
+        <label for="userid">ID</label>
+        <div class="input-wrapper">
+          <img class="icon" src="user_id_아이콘.png" alt="id icon">
+          <input id="userid" type="id" name="userid" required />
+        </div>
+      </div>
+      <div class="label-wrapper">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <img class="icon" src="password_아이콘.png" alt="pw icon">
+          <input id="password" type="password" name="password" required />
+        </div>
+      </div>
       <button type="button" onclick="login();">Login</button>
     </form>
 
-    <a href="./signup">회원가입</a>
+    <a href="/user/signup">회원가입</a>
   </fieldset>
 
   <script>

@@ -1,28 +1,26 @@
 const { User } = require('../models');
 const { hashPassword, comparePassword } = require('../utils/encrypt');
-const jwt = require('jsonwebtoken'); 
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 exports.signUp = (req, res) => {
     res.render('signup');
 }
+
 exports.logIn = (req, res) => {
     res.render('login');
 };
+
 exports.postsignUp = async (req, res) => {
     try {
         const { userid, nickname, password } = req.body;
         const validatePassword = (password) => {
-            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/; //최소 6자 이상, 영문자, 순자, 특수문자
-
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/; // 최소 6자 이상, 영문자, 숫자, 특수문자
             return passwordRegex.test(password);
         }
         if (!validatePassword(password)) {
-            return res.status(400).send({ message: "password error"});
+            return res.status(400).send({ message: "password error" });
         }
-        // if (existingUser) {
-        //     return res.status(400).send({ message: 'User ID already exists' });
-        // } 이유 : model에서 이미 중복인지 아닌지 추려내고 있다.
         const hashedPassword = await hashPassword(password);
         const newUser = await User.create({ userid, nickname, password: hashedPassword });
         res.send({ id: newUser.id, userid, nickname });
@@ -31,9 +29,6 @@ exports.postsignUp = async (req, res) => {
         res.status(500).send({ message: error.message });
     }
 };
-// 회원가입 (비밀번호 정규표현식에 맞는지-> controller / 아이디, 닉네임 중복 방지-> model에서 진행)
-// 이거에 대해서 생각해보고 공부해보길 바람... 의견을 내고 이야기한다면 좋은 주제가 될거 같다(코드 설계)
-
 
 exports.postlogIn = async (req, res) => {
     try {
@@ -46,16 +41,13 @@ exports.postlogIn = async (req, res) => {
         if (!match) {
             return res.status(400).send({ message: '비밀번호가 잘못 되었습니다. 비밀번호를 정확히 입력해 주세요.' });
         }
-        console.log('Cuser > JWT_SECRET:', process.env.JWT_SECRET);
-        // jsonwebtoken 모듈 다운후에 저장하면 된다... +
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.cookie('token', token, {
-            httpOnly: true, // 클라이언트 접근불가
-            secure: true, // HTTPS에서만 전송 / 보안상 높음
-            sameSite: 'strict', // 같은 사이트에서만 쿠키 전송
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
             maxAge: 3600000 // 1시간 (밀리초 기준)
         });
-        console.log('Cuser > Token:', token); // 쿠키 제대로 사용확인 완료
         res.send({ message: '로그인 성공', token });
     } catch (error) {
         console.error('Error in postsignIn:', error);
@@ -80,23 +72,17 @@ exports.checkLoginStatus = (req, res) => {
     } else {
         res.json({ isLoggedIn: false });
     }
-}; // 로그아웃은 백 : res에 로그아웃 메세지 보내기 / 프론트 : localstorage안에 있는 토큰 비우기로 역할 확실히 분담
-   // localhistory일땐 프론트에서 비우면 그만이지만, 쿠키는 서버에서 비우게 할 수 있음.... 따라서 clearCookie사용 (차이점)
-
-
+};
 
 // 닉네임 중복 확인 함수
-// 닉네임, 아이디 중복검사를 모델에서 실시하고 있지만, 
-// 사용자가 입력한 값을 실시간으로 중복 검사를 수행하여 즉각적인 피드백을 제공하려면
-// 프론트엔드와 백엔드 간의 별도 API 엔드포인트 필요!!!! 
 exports.checkDuplicateNickname = async (req, res) => {
     try {
         const { nickname } = req.body;
         const user = await User.findOne({ where: { nickname } });
         if (user) {
-            return res.status(400).send({ message: '이미 사용중인 닉네임입니다.' });
+            return res.send({ message: '이미 사용중인 닉네임입니다.', available: false });
         }
-        res.send({ message: '사용할 수 있는 닉네임입니다.' });
+        res.send({ message: '사용할 수 있는 닉네임입니다.', available: true });
     } catch (error) {
         console.error('Error in checkDuplicateNickname:', error);
         res.status(500).send({ message: error.message });
@@ -109,17 +95,16 @@ exports.checkDuplicateId = async (req, res) => {
         const { userid } = req.body;
         const user = await User.findOne({ where: { userid } });
         if (user) {
-            return res.status(400).send({ message: '이미 사용 중인 아이디입니다.' });
+            return res.send({ message: '이미 사용 중인 아이디입니다.', available: false });
         }
-        res.send({ message: '사용 가능한 아이디입니다.' });
+        res.send({ message: '사용 가능한 아이디입니다.', available: true });
     } catch (error) {
         console.error('Error in checkDuplicateId:', error);
         res.status(500).send({ message: error.message });
     }
 };
 
-// 로그인 로그아웃 버튼 변경
-// controller/Cuser.js
+// 로그인 상태 확인 함수 (중복 정의 제거)
 exports.checkLoginStatus = (req, res) => {
     if (req.cookies.token) {
         res.json({ isLoggedIn: true });
