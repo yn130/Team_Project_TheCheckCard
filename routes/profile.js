@@ -9,4 +9,5 @@ router.delete('/delete', authenticateToken, controller.deleteProfile);
 router.delete('/comments/:commentId', authenticateToken, controller.deleteComment);
 router.delete('/cards/unlike/:cardId', authenticateToken, controller.unlikeCard);
 
+
 module.exports = router;
