@@ -89,3 +89,17 @@ exports.unlikeCard = async (req, res) => {
         res.status(500).send({ message: '좋아요 취소 중 오류가 발생했습니다.' });
     }
 };
+
+exports.getLikedCards = async (req, res) => {
+    try {
+        const likedCards = await CardLike.findAll({
+            where: { user_id: req.user.userId },
+            include: [{ model: Card }]
+        });
+
+        res.json(likedCards.map(like => like.Card));
+    } catch (error) {
+        console.error('Error fetching liked cards:', error);
+        res.status(500).send({ message: '좋아요한 카드를 가져오는 중 오류가 발생했습니다.' });
+    }
+};
