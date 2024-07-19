@@ -63,7 +63,7 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            z-index: 10000;
+            z-index: 1;
             width: 100%;
             height: 220px;
             transition: 0.5s;
@@ -96,10 +96,11 @@
         }
         .container .card .contentBx h2 {
             position: relative;
-            font-weight: 600;
+            font-weight: 800;
             letter-spacing: 1px;
-            color: #fff;
+            color: #2c410c;
             margin: 0;
+            z-index: 2;
         }
         .container .card .contentBx a {
             display: inline-block;
@@ -279,7 +280,7 @@
                 <img src="<%= card.card_image ? card.card_image : 'default-image-path' %>" alt="<%= card.card_name %>">
             </div>
             <div class="contentBx">
-                <h2><%= card.card_name %></h2>
+                <!-- <h2><%= card.card_name %></h2> -->
                 <a href="" id="viewDetail">상세보기</a>
                 <a href="/index" id="backButton" style="display: none;">뒤로가기</a>
             </div>

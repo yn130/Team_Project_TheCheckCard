@@ -207,12 +207,22 @@
         });
 
         // 검색 버튼 클릭 이벤트
-        document.querySelector('.search-button').addEventListener('click', () => {
-        const query = document.querySelector('.search-input').value;
-        if (query) {
-            window.location.href = `/search?query=${encodeURIComponent(query)}`;
-        }
-    });
+        const searchButton = document.querySelector('.search-button');
+        const searchInput = document.querySelector('.search-input');
+
+        searchButton.addEventListener('click', () => {
+            const query = searchInput.value;
+            if (query) {
+                window.location.href = `/search?query=${encodeURIComponent(query)}`;
+            }
+        });
+
+        // 엔터 키로 검색 버튼 클릭 이벤트
+        searchInput.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                searchButton.click();
+            }
+        });
     </script>
 </body>
 </html>

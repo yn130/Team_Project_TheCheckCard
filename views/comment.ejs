@@ -84,6 +84,13 @@
             background-color: grey;
             cursor: default;
         }
+         /* 필요 시 top-comment 클래스를 제거하거나 유지할 수 있습니다. */
+        .top-comment {
+            /* border: 2px solid gold;
+            background-color: rgba(255, 223, 0, 0.1); */
+            border-radius: 5px;
+        }
+        
     </style>
 </head>
 <body>
@@ -94,20 +101,15 @@
         <button id="add-comment" data-card-id="<%= cardId %>">추가</button>
     </div>
 
-    <div id="top-comments-container">
-        <h3>Top Comments</h3>
-        <!-- 상위 댓글 목록이 여기에 추가됩니다 -->
-    </div>
-
     <div id="comments-container">
         <!-- 댓글 목록이 여기에 추가됩니다 -->
         <% if (comments.length === 0) { %>
             <div class="no-comments">아직 입력된 댓글이 없습니다.</div>
         <% } else { %>
-            <% comments.forEach(comment => { %>
-                <div class="comment">
+            <% comments.forEach((comment, index) => { %>
+                <% const isTopComment = index < 2; %> <!-- 상위 2개의 댓글을 식별 -->
+                <div class="comment <%= isTopComment ? 'top-comment' : '' %>" data-id="<%= comment.comment_id %>">
                     <div class="comment-header">
-                        <img src="https://via.placeholder.com/40" alt="Profile Image">
                         <div class="comment-author"><%= comment.User.nickname %></div>
                         <div class="comment-options"><%= new Date(comment.createdAt).toLocaleDateString() %></div>
                     </div>
@@ -115,17 +117,22 @@
                         <%= comment.comment_contents %>
                     </div>
                     <div class="comment-footer">
-                        <span class="likes">👍</span>
-                        <span class="comments">0</span>
-                        <span class="comment-action" data-likes="<%= comment.likes %>">좋아요</span>
+                        <span class="likes"><%= comment.likeCount %></span> <!-- 좋아요 수를 나타내는 부분 -->
+                        <span class="comments">0</span> <!-- 댓글 수를 나타내는 부분 -->
+                        <span class="comment-action" data-comment-id="<%= comment.comment_id %>" data-card-id="<%= comment.card_id %>">좋아요</span> <!-- 좋아요 버튼에 card_id 추가 -->
+                        <% if (user && user.userId === comment.userid) { %>
+                            <button class="edit-comment">수정</button>
+                            <button class="delete-comment">삭제</button>
+                        <% } %>
                     </div>
                 </div>
             <% }) %>
         <% } %>
     </div>
-    <div class="pagination" id="pagination">
-        <!-- 페이지네이션 버튼들이 여기에 추가됩니다 -->
-    </div>
+    
+    <!-- 페이지네이션 컨테이너 -->
+    <div class="pagination" id="pagination"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const commentInput = document.getElementById('comment-input');
@@ -133,26 +140,19 @@
             const commentsContainer = document.getElementById('comments-container');
             const charCounter = document.getElementById('char-counter');
             const paginationContainer = document.getElementById('pagination');
-            const commentsPerPage = 5; // 페이지에 보여줄 댓글 갯수 (5개)
-
+            const commentsPerPage = 5;
+    
             let currentPage = <%= JSON.stringify(currentPage) %>;
             let comments = <%- JSON.stringify(comments) %>;
             let totalPages = <%= JSON.stringify(totalPages) %>;
-            let user = JSON.parse('<%- JSON.stringify(user)%>');
-
-            console.log('Initial comments:', comments); // 콘솔에 초기 댓글 출력
-            console.log('User:', user); // 콘솔에 사용자 정보 출력
-            console.log('Total pages:', totalPages); // 콘솔에 전체 페이지 수 출력
-
-            // 글자 수 업데이트 함수
+            let user = JSON.parse('<%- JSON.stringify(user) %>');
+    
             const updateCharCount = () => {
                 charCounter.textContent = commentInput.value.length;
             };
-
-            // 입력이 변경될 때 글자 수 업데이트
+    
             commentInput.addEventListener('input', updateCharCount);
-
-            // 댓글 추가 함수
+    
             const addComment = () => {
                 const text = commentInput.value.trim();
                 const cardId = addCommentButton.getAttribute('data-card-id');
@@ -166,19 +166,16 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${user.token}` // 토큰을 포함하여 요청을 보냄
+                            'Authorization': `Bearer ${user.token}`
                         },
                         body: JSON.stringify({ comment_contents: text, card_id: cardId })
                     }).then(response => {
                         if (response.ok) {
-                            response.json().then(newComment => {
-                                comments.push(newComment);
-                                totalPages = Math.ceil(comments.length / commentsPerPage);
-                                displayComments(currentPage);
-                                setupPagination(totalPages);
+                            response.json().then(data => {
+                                location.reload(); // 댓글 추가 후 페이지 새로고침
                             });
                             commentInput.value = '';
-                            updateCharCount(); // 댓글이 추가되면 글자 수 업데이트
+                            updateCharCount();
                         } else {
                             alert('댓글 추가 실패.');
                         }
@@ -190,88 +187,128 @@
                     alert('댓글을 입력하세요.');
                 }
             };
-
-            // 댓글 추가 버튼 클릭 이벤트
+    
             addCommentButton.addEventListener('click', addComment);
-
-            // Enter 키로 댓글 추가 이벤트
+    
             commentInput.addEventListener('keyup', (event) => {
                 if (event.key === 'Enter') {
                     addComment();
                 }
             });
-
-            // 댓글 생성 함수
-            const createComment = (comment) => {
+    
+            const createComment = (comment, index) => {
+                // 상위 2개의 댓글이고 좋아요 수가 1 이상인 경우에만 'top-comment' 클래스를 추가합니다.
+                const isTopComment = index < 2 && comment.likeCount > 0;
                 const commentDiv = document.createElement('div');
-                commentDiv.className = 'comment';
+                commentDiv.className = 'comment' + (isTopComment ? ' top-comment' : '');
                 commentDiv.dataset.id = comment.comment_id;
-
+    
                 const commentHeader = document.createElement('div');
                 commentHeader.className = 'comment-header';
-
+    
                 const commentAuthor = document.createElement('div');
                 commentAuthor.className = 'comment-author';
                 commentAuthor.textContent = comment.User ? comment.User.nickname : '익명';
-
+    
+                // 순위에 따라 이모지를 추가합니다.
+                if (isTopComment) {
+                    const emoji = document.createElement('span');
+                    emoji.style.marginLeft = '10px';
+                    if (index === 0) {
+                        emoji.textContent = '🥇'; // 1순위
+                    } else if (index === 1) {
+                        emoji.textContent = '🥈'; // 2순위
+                    }
+                    commentAuthor.appendChild(emoji);
+                }
+    
                 const commentOptions = document.createElement('div');
                 commentOptions.className = 'comment-options';
-
-                if (user && user.userId == comment.userid) {
+                commentOptions.textContent = new Date(comment.createdAt).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '/').replace(/\s/g, '');
+    
+                if (user && user.userId === comment.userid) {
                     const editButton = document.createElement('button');
+                    editButton.className = 'edit-comment';
                     editButton.textContent = '수정';
                     editButton.addEventListener('click', () => {
                         editComment(commentDiv);
                     });
-
+    
                     const deleteButton = document.createElement('button');
+                    deleteButton.className = 'delete-comment';
                     deleteButton.textContent = '삭제';
                     deleteButton.addEventListener('click', () => {
                         deleteComment(commentDiv);
                     });
-
+    
                     commentOptions.appendChild(editButton);
                     commentOptions.appendChild(deleteButton);
                 }
-
+    
                 commentHeader.appendChild(commentAuthor);
                 commentHeader.appendChild(commentOptions);
-
+    
                 const commentBody = document.createElement('div');
                 commentBody.className = 'comment-body';
                 commentBody.textContent = comment.comment_contents;
-
+    
                 const commentFooter = document.createElement('div');
                 commentFooter.className = 'comment-footer';
-
+    
                 const likesSpan = document.createElement('span');
                 likesSpan.className = 'likes';
-                likesSpan.textContent = '0';
-
+                likesSpan.textContent = comment.likeCount || '0';
+    
                 const likeButton = document.createElement('span');
                 likeButton.className = 'comment-action';
-                likeButton.innerHTML = '좋아요 <span class="thumb">:+1:</span>';
-                likeButton.addEventListener('click', (event) => {
-                    if (event.target.classList.contains('thumb')) {
-                        likesSpan.textContent = '0';
-                    } else {
-                        let likes = parseInt(likesSpan.textContent);
-                        likes++;
-                        likesSpan.textContent = likes;
-                    }
+                likeButton.innerHTML = '좋아요 <span class="thumb">🔥</span>';
+                likeButton.setAttribute('data-card-id', comment.card_id);
+                likeButton.addEventListener('click', () => {
+                    toggleLike(comment.comment_id, comment.card_id, likesSpan);
                 });
-
+    
                 commentFooter.appendChild(likesSpan);
                 commentFooter.appendChild(likeButton);
-
+    
                 commentDiv.appendChild(commentHeader);
                 commentDiv.appendChild(commentBody);
                 commentDiv.appendChild(commentFooter);
-
+    
                 commentsContainer.appendChild(commentDiv);
             };
-
-            // 댓글 수정
+    
+            const toggleLike = async (commentId, cardId, likesSpan) => {
+                if (!user) {
+                    alert('먼저 로그인을 해주세요');
+                    return;
+                }
+                try {
+                    const response = await fetch('/comment/like', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${user.token}`
+                        },
+                        body: JSON.stringify({ comment_id: commentId, card_id: cardId })
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        likesSpan.textContent = data.likeCount;
+    
+                        // 좋아요 수 변경 후 댓글 목록을 다시 가져와서 업데이트
+                        comments = data.comments;
+                        totalPages = data.totalPages;
+                        displayComments(currentPage);
+                        setupPagination(totalPages);
+                    } else {
+                        alert('좋아요 처리 실패.');
+                    }
+                } catch (error) {
+                    console.error('Error toggling like:', error);
+                    alert('좋아요 처리 실패.');
+                }
+            };
+    
             const editComment = (comment) => {
                 const commentBody = comment.querySelector('.comment-body');
                 const newText = prompt('댓글을 수정하세요:', commentBody.textContent);
@@ -280,7 +317,7 @@
                         method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${user.token}` // 토큰을 포함하여 요청을 보냄
+                            'Authorization': `Bearer ${user.token}`
                         },
                         body: JSON.stringify({ comment_contents: newText })
                     }).then(response => {
@@ -292,14 +329,13 @@
                     });
                 }
             };
-
-            // 댓글 삭제
+    
             const deleteComment = (comment) => {
                 if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
                     fetch(`/comment/delete/${comment.dataset.id}`, {
                         method: 'DELETE',
                         headers: {
-                            'Authorization': `Bearer ${user.token}` // 토큰을 포함하여 요청을 보냄
+                            'Authorization': `Bearer ${user.token}`
                         }
                     }).then(response => {
                         if (response.ok) {
@@ -308,7 +344,6 @@
                             if (currentPage > totalPages) {
                                 currentPage = totalPages;
                             }
-                            // 페이지 새로 고침
                             location.reload();
                         } else {
                             alert('댓글 삭제 실패.');
@@ -316,19 +351,17 @@
                     });
                 }
             };
-
-            // 댓글 표시 함수
+    
             const displayComments = (page) => {
                 commentsContainer.innerHTML = '';
                 const start = (page - 1) * commentsPerPage;
                 const end = start + commentsPerPage;
                 const paginatedComments = comments.slice(start, end);
-                paginatedComments.forEach(comment => {
-                    createComment(comment);
+                paginatedComments.forEach((comment, index) => {
+                    createComment(comment, index);
                 });
             };
-
-            // 페이지네이션 버튼 설정 함수
+    
             const setupPagination = (totalPages) => {
                 paginationContainer.innerHTML = '';
                 for (let i = 1; i <= totalPages; i++) {
@@ -345,13 +378,17 @@
                     paginationContainer.appendChild(button);
                 }
             };
-
-            // 초기 댓글 로드
+    
             displayComments(currentPage);
             setupPagination(totalPages);
-
-            // 초기 글자 수 업데이트
             updateCharCount();
+        });
+
+        // 새로 추가된 코드: 창이 닫힐 때 부모 창에 메시지를 보냄
+        window.addEventListener('beforeunload', function () {
+            if (window.opener && !window.opener.closed) {
+                window.opener.postMessage('reload', '*');
+            }
         });
     </script>
 </body>
