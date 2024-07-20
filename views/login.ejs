@@ -46,6 +46,10 @@ label {
   margin-right: 10px;
 }
 
+label[for="userid"] {
+  margin-right: 55px; 
+}
+
 .input-wrapper {
   display: flex;
   align-items: center;
@@ -53,7 +57,18 @@ label {
   position: relative;
 }
 
-input[type="id"], input[type="password"] {
+input[type="id"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: transparent;
+  color: white;
+  padding-left: 40px; /* 아이콘 공간 확보를 위해 왼쪽 패딩 추가 */
+}
+
+ input[type="password"] {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -113,14 +128,14 @@ a:hover {
       <div class="label-wrapper">
         <label for="userid">ID</label>
         <div class="input-wrapper">
-          <img class="icon" src="user_id_아이콘.png" alt="id icon">
+          <img class="icon" src="/image/user_id_아이콘.png" alt="id icon">
           <input id="userid" type="id" name="userid" required />
         </div>
       </div>
       <div class="label-wrapper">
         <label for="password">Password</label>
         <div class="input-wrapper">
-          <img class="icon" src="password_아이콘.png" alt="pw icon">
+          <img class="icon" src="/image/password_아이콘.png" alt="pw icon">
           <input id="password" type="password" name="password" required />
         </div>
       </div>
