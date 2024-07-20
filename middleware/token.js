@@ -1,9 +1,7 @@
 const jwt = require('jsonwebtoken');
+
 const authenticateToken = (req, res, next) => {
   const token = req.cookies['token']; // 쿠키에서 토큰을 가져옵니다.
-  // if (!token) {
-  //   return res.status(403).json({ message: '토큰이 존재하지 않습니다.' });
-  // }
   if (token == undefined) {
     req.user = null;
     return next();
@@ -17,8 +15,27 @@ const authenticateToken = (req, res, next) => {
       return res.status(500).json({ message: '인증된 유저가 아닙니다' });
     }
     console.log(decodedToken);
-    req.user = decodedToken // 인증된 사용자의 ID를 요청 객체에 추가합니다.
+    req.user = decodedToken; // 인증된 사용자의 ID를 요청 객체에 추가합니다.
     next(); // 인증이 성공하면 다음 미들웨어로 넘어갑니다.
   });
 };
-module.exports = authenticateToken;
+
+const checkLoginStatus = (req, res) => {
+  const token = req.cookies.token;
+  if (token) {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        return res.json({ isLoggedIn: false });
+      } else {
+        return res.json({ isLoggedIn: true });
+      }
+    });
+  } else {
+    return res.json({ isLoggedIn: false });
+  }
+};
+
+module.exports = {
+  authenticateToken,
+  checkLoginStatus
+};
