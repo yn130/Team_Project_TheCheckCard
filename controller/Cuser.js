@@ -98,7 +98,7 @@ exports.checkDuplicateNickname = async (req, res) => {
         const { nickname } = req.body;
         const user = await User.findOne({ where: { nickname } });
         if (user) {
-            return res.send({ message: '이미 사용중인 닉네임입니다.', available: false });
+            return res.send({ message: '이미 사용중인 닉네임입니다. 다른 닉네임을 입력해주세요.', available: false });
         }
         res.send({ message: '사용할 수 있는 닉네임입니다.', available: true });
     } catch (error) {
