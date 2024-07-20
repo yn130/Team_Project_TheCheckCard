@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -13,7 +13,6 @@
             background-color: black;
             margin: 0;
         }
-
         fieldset {
             border: 1px solid #ccc;
             padding: 30px;
@@ -21,28 +20,23 @@
             height: 450px;
             background-color: #000000;
         }
-
         legend {
             font-size: 2.5em;
             font-weight: bold;
             margin-bottom: 20px;
             color: white;
         }
-
         .register {
             width: 100%;
         }
-
         label {
             margin-bottom: 10px;
             width: 80px;
-            margin-top: -10px; 
+            margin-top: -10px;
         }
-
         .input-container {
-            margin-top: 30px; 
+            margin-top: 30px;
         }
-
         input[type="text"], input[type="id"], input[type="password"] {
             padding: 10px;
             margin-bottom: 10px;
@@ -53,14 +47,12 @@
             background-color: transparent;
             color: white;
         }
-
         .id-container, .nickname-container, .password-container {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 10px;
         }
-
         .id-container button, .nickname-container button {
             padding: 10px;
             color: white;
@@ -71,18 +63,15 @@
             box-sizing: border-box;
             margin-top: -20px; /* 버튼을 더 위로 이동 */
         }
-
         .register-button {
             float: right;
             margin-top: 30px;
             width: 20%;
         }
-
         .id-container button:hover, .nickname-container button:hover {
             background-color: black;
             text-decoration: underline;
         }
-
         #nickname, #userid {
             padding: 10px;
             margin-bottom: 10px;
@@ -91,7 +80,6 @@
             width: calc(100% - 150px);
             box-sizing: border-box;
         }
-
         #password {
             padding: 10px;
             margin-bottom: 10px;
@@ -101,14 +89,12 @@
             box-sizing: border-box;
             margin-left: -7px; /* 비밀번호 글자와 입력창 사이의 간격 조절 */
         }
-
         #nickname-check-result, #id-check-result {
             font-size: 0.7em;
             margin-top: 10px; /* 마진을 줄여 메시지를 입력창에 더 가깝게 */
             margin-bottom: 20px; /* 메시지와 다음 요소 사이에 마진 추가 */
             color: white;
         }
-
         button {
             padding: 10px;
             background-color: white;
@@ -119,11 +105,9 @@
             width: 20%;
             box-sizing: border-box;
         }
-
         button:hover {
             background-color: #3D0402;
         }
-
         a {
             display: block;
             margin-top: 20px;
@@ -131,11 +115,9 @@
             color: white;
             text-decoration: none;
         }
-
         a:hover {
             text-decoration: underline;
         }
-
     </style>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
@@ -143,186 +125,124 @@
     <div class="container">
         <fieldset>
             <legend>회원가입</legend>
-            <!-- <form name="form_register" class="register" enctype="multipart/form-data"> -->
-            <!-- form 태그에 method="POST"와 action="/user/signup" 추가 : 로그인 페이지로 바로 이동할 수 있게! -->
             <form name="form_register" class="register" enctype="multipart/form-data" method="POST" action="/user/signup">
                 <div class="input-container">
                     <div class="nickname-container">
                         <label for="nickname">닉네임⠀⠀</label>
-                        <!-- 닉네임 입력 후 중복 확인이 되지 않은 채로 아이디 입력란으로 이동 시 경고 메시지 표시 -->
-                        <input id="nickname" type="text" name="nickname" placeholder="nickname" required autocomplete="username" onblur="checkNicknameBlur()" />
-                        <button type="button" onclick="checkDuplicateNickname()">중복 확인</button>
+                        <input id="nickname" type="text" name="nickname" placeholder="nickname" required />
+                        <button type="button" onclick="checkDuplicate('nickname')">중복 확인</button>
                     </div>
-                    <!-- 닉네임 중복검사 확인 p 태그도 필요 -->
                     <p id="nickname-check-result"></p>
                     <div class="id-container input-icon">
                         <label for="userid">아이디⠀</label>
-                        <!-- 아이디 입력 후 중복 확인이 되지 않은 채로 비밀번호 입력란으로 이동 시 경고 메시지 표시 -->
-                        <input id="userid" type="id" name="userid" placeholder="ID" required autocomplete="username" disabled onblur="checkIdBlur()" />
-                        <button type="button" onclick="checkDuplicateId()" disabled>중복 확인</button>
+                        <input id="userid" type="text" name="userid" placeholder="ID" required disabled onfocus="checkNicknameFirst()" />
+                        <button type="button" onclick="checkDuplicate('userid')" disabled>중복 확인</button>
                     </div>
                     <p id="id-check-result"></p>
                     <div class="password-container">
                         <label for="password">비밀번호⠀⠀</label>
-                        <input id="password" type="password" name="password" placeholder="password" required autocomplete="new-password" disabled />
+                        <input id="password" type="password" name="password" placeholder="password" required disabled onfocus="checkNicknameFirst()" />
                     </div>
                 </div>
-                <!-- <button type="button" onclick="register();" class="register-button">가입</button> -->
-                <!-- type="submit"과 onclick 이벤트 추가 -->
-                <!-- 왜?  -->
-                <button type="submit" onclick="register(event);" class="register-button" disabled>가입</button> 
+                <button type="submit" onclick="register(event);" class="register-button" disabled>가입</button>
             </form>
-            <!-- 여기서 . 없애기 -->
             <a href="/user/login">로그인</a>
         </fieldset>
     </div>
     <script>
         let isNicknameChecked = false;
         let isIdChecked = false;
-        let nicknameCheckClicked = false;
-        let idCheckClicked = false;
-
-        // 비밀번호 조건 검사 -> 정규표현식으로 검사해서 조건에 맞으면 'true' / 맞지 않으면 'false'
-        // 비밀번호 유효한지 검증 -> front & backend 둘다 적용필요
-        // 프론트엔드에서는 사용자에게 즉각적인 피드백을 제공하고, 백엔드에서는 보안을 강화하여 신뢰할 수 없는 입력을 방지  
+        const nicknameInput = document.getElementById('nickname');
+        const userIdInput = document.getElementById('userid');
+        const passwordInput = document.getElementById('password');
+        const registerButton = document.querySelector('.register-button');
         function validatePassword(password) {
-            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/; //최소 6자 이상, 영문자, 숫자, 특수문자
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
             return passwordRegex.test(password);
         }
-
-        // 닉네임 중복 여부 서버에 요청해서 확인함 
-        function checkDuplicateNickname() {
-            nicknameCheckClicked = true;
-            const nickname = document.getElementById('nickname').value;
-            axios.post('/user/check-nickname', { nickname: nickname })
-                .then(response => {
-                    const nicknameCheckResult = document.getElementById('nickname-check-result');
-                    if (nicknameCheckResult) {
-                        nicknameCheckResult.textContent = response.data.message;
-                        nicknameCheckResult.style.color = response.data.available ? 'skyblue' : 'red'; // 메시지 색상 변경
-                        isNicknameChecked = response.data.available;
-                        if (isNicknameChecked) {
-                            enableIdInput(); // 닉네임 중복 확인이 완료되면 아이디 입력란 활성화
-                        }
-                    }
-                })
-                .catch(error => {
-                    const nicknameCheckResult = document.getElementById('nickname-check-result');
-                    if (nicknameCheckResult) {
-                        nicknameCheckResult.textContent = '오류가 발생했습니다.';
-                        nicknameCheckResult.style.color = 'red';
-                        isNicknameChecked = false;
-                    }
-                });
+        function checkDuplicate(type) {
+    const value = type === 'nickname' ? nicknameInput.value : userIdInput.value;
+    const url = `/user/check-${type === 'nickname' ? 'nickname' : 'id'}`;
+    const checkResult = document.getElementById(`${type === 'nickname' ? 'nickname-check-result' : 'id-check-result'}`);
+    console.log(`Sending request to ${url} with value: ${value}`); // 요청이 보내지는지 확인하는 로그
+    console.log(`checkResult for ${type}:`, checkResult); // 요소가 제대로 선택되었는지 확인하는 로그
+    if (!checkResult) {
+        console.error(`Element with id ${type}-check-result not found.`);
+        return;
+    }
+    axios.post(url, { [type]: value })
+        .then(response => {
+            console.log('Response:', response.data); // 응답 데이터 로그
+            checkResult.textContent = response.data.message;
+            checkResult.style.color = response.data.available ? 'skyblue' : 'red';
+            if (type === 'nickname') {
+                isNicknameChecked = response.data.available;
+                if (isNicknameChecked) {
+                    enableIdInput();
+                }
+            } else if (type === 'userid') {
+                isIdChecked = response.data.available;
+                if (isIdChecked) {
+                    enablePasswordInput();
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error); // 오류 로그
+            checkResult.textContent = '오류가 발생했습니다.';
+            checkResult.style.color = 'red';
+            if (type === 'nickname') isNicknameChecked = false;
+            if (type === 'userid') isIdChecked = false;
+        });
+}
+        function checkNicknameFirst() {
+            if (!isNicknameChecked) {
+                alert('닉네임 중복 확인을 먼저 해주세요.');
+                nicknameInput.focus();
+            }
         }
-
-        // 아이디 중복 여부 서버에 요청해서 확인함 
-        function checkDuplicateId() {
-            idCheckClicked = true;
-            const userId = document.getElementById('userid').value;
-            axios.post('/user/check-id', { userid: userId })
-                .then(response => {
-                    const idCheckResult = document.getElementById('id-check-result');
-                    if (idCheckResult) {
-                        idCheckResult.textContent = response.data.message;
-                        idCheckResult.style.color = response.data.available ? 'skyblue' : 'red'; // 메시지 색상 변경
-                        isIdChecked = response.data.available;
-                        if (isIdChecked) {
-                            enablePasswordInput(); // 아이디 중복 확인이 완료되면 비밀번호 입력란 활성화
-                        }
-                    }
-                })
-                .catch(error => {
-                    const idCheckResult = document.getElementById('id-check-result');
-                    if (idCheckResult) {
-                        idCheckResult.textContent = '오류가 발생했습니다.';
-                        idCheckResult.style.color = 'red';
-                        isIdChecked = false;
-                    }
-                });
-        }
-
-        // 이벤트 방지를 위해 event 파라미터 추가
         function register(event) {
-            event.preventDefault(); // 폼의 기본 제출 동작을 막음
-            const form = document.forms['form_register'];
-            const userId = form.userid.value;
-            const password = form.password.value;
-            const nickname = form.nickname.value;
-
+            event.preventDefault();
+            const userId = userIdInput.value;
+            const password = passwordInput.value;
+            const nickname = nicknameInput.value;
             if (!validatePassword(password)) {
                 alert('비밀번호가 유효하지 않습니다. 최소 6자 이상, 영어, 숫자, 특수문자를 포함해야 합니다.');
                 return;
             }
-
             if (!isNicknameChecked) {
                 alert('닉네임 중복 확인을 해주세요.');
                 return;
             }
-
             if (!isIdChecked) {
                 alert('아이디 중복 확인을 해주세요.');
                 return;
             }
-
-            axios({
-                method: 'POST',
-                url: '/user/signup',
-                data: {
-                    userid: userId,
-                    password: password,
-                    nickname: nickname,
-                }
-            }).then((res) => {
-                console.log(res);
-                editCancel();
-                window.location.href = '/user/login';
-            }).catch((error) => {
-                console.error('Error in register:', error);
-                if (error.response && error.response.data) {
-                    alert(error.response.data.message);
-                }
-            });
+            axios.post('/user/signup', { userid: userId, password: password, nickname: nickname })
+                .then(res => {
+                    console.log(res);
+                    editCancel();
+                    window.location.href = '/user/login';
+                })
+                .catch(error => {
+                    console.error('Error in register:', error);
+                    if (error.response && error.response.data) {
+                        alert(error.response.data.message);
+                    }
+                });
         }
-
-        // editCancel : 원래의 빈값으로 바꿔주는 용도
         function editCancel() {
-            const form = document.forms['form_register'];
-            form.userid.value = '';
-            form.password.value = '';
-            form.nickname.value = '';
+            nicknameInput.value = '';
+            userIdInput.value = '';
+            passwordInput.value = '';
         }
-
-        // 사용자가 닉네임 입력란을 벗어날 때 중복 확인이 되지 않았을 경우 경고 메시지 표시
-        function checkNicknameBlur() {
-            const nickname = document.getElementById('nickname').value;
-            if (!isNicknameChecked && nickname && !nicknameCheckClicked) {
-                alert('닉네임 중복 확인을 해주세요.');
-                document.getElementById('nickname').focus();
-            }
-            nicknameCheckClicked = false;
-        }
-
-        // 사용자가 아이디 입력란을 벗어날 때 중복 확인이 되지 않았을 경우 경고 메시지 표시
-        function checkIdBlur() {
-            const userId = document.getElementById('userid').value;
-            if (!isIdChecked && userId && !idCheckClicked) {
-                alert('아이디 중복 확인을 해주세요.');
-                document.getElementById('userid').focus();
-            }
-            idCheckClicked = false;
-        }
-
-        // 닉네임 중복 확인이 완료되면 아이디 입력란과 버튼을 활성화하는 함수
         function enableIdInput() {
-            document.getElementById('userid').disabled = false;
+            userIdInput.disabled = false;
             document.querySelector('.id-container button').disabled = false;
         }
-
-        // 아이디 중복 확인이 완료되면 비밀번호 입력란과 가입 버튼을 활성화하는 함수
         function enablePasswordInput() {
-            document.getElementById('password').disabled = false;
-            document.querySelector('.register-button').disabled = false;
+            passwordInput.disabled = false;
+            registerButton.disabled = false;
         }
     </script>
 </body>
