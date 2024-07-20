@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+    <%- include('include/include') %>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,9 +44,9 @@
             grid-template-rows: repeat(auto-fill, var(--cardH));
             grid-template-columns: var(--cardW);
             grid-row-gap: 8em; /* 세로 간격 조정 */
-            grid-column-gap: 1.5em; /* 가로 간격 조정 */
+            grid-column-gap: var(--cardColumnGap); /* 가로 간격 조정 */
             position: fixed;
-            top: 30%;
+            top: 40%;
             left: 65%;
             transform: translateX(-50%) rotateX(45deg) rotateZ(45deg) translateY(var(--scroll));
             transform-origin: 50% 0;
@@ -277,6 +278,13 @@
                 } else {
                     root.style.setProperty('--cardW', '14em');
                     root.style.setProperty('--cardH', '8em');
+                }
+
+                // 카드가 20개 이하일 때 가로 간격 좁게 설정
+                if (cardCount <= 20) {
+                    root.style.setProperty('--cardColumnGap', '0.5em');
+                } else {
+                    root.style.setProperty('--cardColumnGap', '1.5em');
                 }
 
                 const mainElement = document.querySelector('main');
