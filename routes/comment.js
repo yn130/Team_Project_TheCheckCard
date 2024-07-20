@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const commentController = require('../controller/CComment');
-const authenticateToken = require('../middleware/token');
+const { authenticateToken } = require('../middleware/token'); // 여기에 변경 사항 있습니다
 
 // 댓글 페이지 보여주기
 router.get('/', authenticateToken, commentController.showComments);

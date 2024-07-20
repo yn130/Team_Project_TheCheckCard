@@ -1,11 +1,12 @@
 const { User } = require('../models');
 const { hashPassword, comparePassword } = require('../utils/encrypt');
 const jwt = require('jsonwebtoken');
+const { checkLoginStatus } = require('../middleware/token'); // 변경된 부분: checkLoginStatus를 middleware에서 가져옴
 require('dotenv').config();
 
 exports.signUp = (req, res) => {
     res.render('signup');
-}
+};
 
 exports.logIn = (req, res) => {
     res.render('login');
@@ -17,7 +18,7 @@ exports.postsignUp = async (req, res) => {
         const validatePassword = (password) => {
             const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/; // 최소 6자 이상, 영문자, 숫자, 특수문자
             return passwordRegex.test(password);
-        }
+        };
         if (!validatePassword(password)) {
             return res.status(400).send({ message: "password error" });
         }
@@ -50,7 +51,7 @@ exports.postlogIn = async (req, res) => {
         });
         res.send({ message: '로그인 성공', token });
     } catch (error) {
-        console.error('Error in postsignIn:', error);
+        console.error('Error in postlogIn:', error); // 오타 수정 (기존: postsignIn)
         res.status(500).send({ message: error.message });
     }
 };
@@ -65,14 +66,31 @@ exports.logout = (req, res) => {
     }
 };
 
-// 로그인 상태 확인 함수 
-exports.checkLoginStatus = (req, res) => {
-    if (req.cookies.token) {
-        res.json({ isLoggedIn: true });
-    } else {
-        res.json({ isLoggedIn: false });
-    }
-};
+// 변경 전 로그인 확인 함수 - 단순히 쿠키에 토큰이 있는지 여부만 확인함
+// // 로그인 상태 확인 함수 
+// exports.checkLoginStatus = (req, res) => {
+//     if (req.cookies.token) {
+//         res.json({ isLoggedIn: true });
+//     } else {
+//         res.json({ isLoggedIn: false });
+//     }
+// };
+
+// 로그인 상태 확인 함수 - middleware/token.js로 이동
+// exports.checkLoginStatus = (req, res) => {
+//     const token = req.cookies.token;
+//     if (token) {
+//         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+//             if (err) {
+//                 return res.json({ isLoggedIn: false });
+//             } else {
+//                 return res.json({ isLoggedIn: true });
+//             }
+//         });
+//     } else {
+//         return res.json({ isLoggedIn: false });
+//     }
+// };
 
 // 닉네임 중복 확인 함수
 exports.checkDuplicateNickname = async (req, res) => {
@@ -104,11 +122,5 @@ exports.checkDuplicateId = async (req, res) => {
     }
 };
 
-// 로그인 상태 확인 함수 (중복 정의 제거)
-exports.checkLoginStatus = (req, res) => {
-    if (req.cookies.token) {
-        res.json({ isLoggedIn: true });
-    } else {
-        res.json({ isLoggedIn: false });
-    }
-};
+// 로그인 상태 확인 함수 (middleware/token.js에서 가져옴)
+exports.checkLoginStatus = checkLoginStatus; // 변경된 부분
