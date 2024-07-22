@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <%- include('include/include') %>
+    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -272,6 +272,15 @@
             }
         }
 
+        /* 미디어 쿼리 추가: 브라우저 창 너비가 470px 이하일 때 */
+        @media (max-width: 470px) {
+            .gradient-border, #box {
+                width: 80%; /* 가로 길이를 80%로 줄임 */
+                font-size: 1.0rem; /* 폰트 크기를 조금 줄임 */
+                left: 10%; /* 위치를 좌우로 조정, 여기서 원하는 값으로 조정 */
+                transform: translate(0, -50%); /* 위치를 조정 */
+            }
+        }
     </style>
 </head>
 <body>
