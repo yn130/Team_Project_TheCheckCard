@@ -43,22 +43,21 @@ exports.patchProfile = async (req, res) => {
     }
 };
 
-// 프로필 삭제 
+// 프로필 삭제
 exports.deleteProfile = async (req, res) => {
     try {
-        // DB.user에서 토큰의 id값과 같은 user 찾기 
-        // findByPk는 기본 키(primary key)를 기준으로 사용자를 찾는 메서드임
-        const user = await User.findByPk(req.user.userId);
-        if (!user) return res.sendStatus(404);
-
-        // DB에서 유저 삭제! 
-        await user.destroy();
-        res.json({ message: '회원탈퇴되었습니다.' });
+      const user = await User.findByPk(req.user.userId);
+      if (!user) return res.sendStatus(404);
+  
+      await user.destroy();
+      res.clearCookie('token'); // 쿠키 삭제
+      res.json({ message: '회원탈퇴되었습니다.' });
     } catch (error) {
-        console.error('Error deleting profile:', error);
-        res.status(500).send({ message: '프로필 삭제 중 오류가 발생했습니다.' });
+      console.error('Error deleting profile:', error);
+      res.status(500).send({ message: '프로필 삭제 중 오류가 발생했습니다.' });
     }
-};
+  };
+  
 
 // 내가 쓴 댓글 삭제 
 exports.deleteComment = async (req, res) => {

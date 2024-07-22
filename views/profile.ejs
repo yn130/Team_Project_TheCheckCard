@@ -5,248 +5,244 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>마이 페이지</title>
     <style>
-        
-#particles-js {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: #000;
-    background-size: cover;
-    background-position: 50% 50%;
-    z-index: -1;
-}
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            background-size: cover;
+            background-position: 50% 50%;
+            z-index: -1;
+        }
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #000;
-    color: #fff;
-    margin: 0;
-    padding: 0;
-}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
 
-.container {
-    position: relative;
-    z-index: 1;
-    width: 80%;
-    margin: auto;
-    background: #111;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-}
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 80%;
+            margin: auto;
+            background: #111;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
 
-.header-top {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
-}
+        .header-top {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
 
-header {
-    border-bottom: 1px solid #444;
-    padding-bottom: 10px;
-}
+        header {
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+        }
 
-.profile {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-}
+        .profile {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
 
-.nickname-container {
-    display: flex;
-    align-items: center;
-}
+        .nickname-container {
+            display: flex;
+            align-items: center;
+        }
 
-.nickname-container span {
-    margin-right: 10px;
-}
+        .nickname-container span {
+            margin-right: 10px;
+        }
 
-#nicknameDisplay {
-    font-weight: bold;
-    font-size: 1.5em; /* 유저 닉네임만 크기 크게 설정 */
-    margin-right: 10px; /* 닉네임과 수정 버튼 사이의 간격 설정 */
-}
+        #nicknameDisplay {
+            font-weight: bold;
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
 
-.profile button, .header-top button {
-    background: #333;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-}
+        .profile button, .header-top button {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
 
-.icon-button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-}
+        .icon-button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
 
-.icon-button img {
-    width: 24px;
-    height: 24px;
-}
+        .icon-button img {
+            width: 24px;
+            height: 24px;
+        }
 
-.profile .right {
-    margin-left: auto;
-}
+        .profile .right {
+            margin-left: auto;
+        }
 
-section {
-    margin-top: 20px;
-}
+        section {
+            margin-top: 20px;
+        }
 
-.comment-section, .card-section {
-    background: #222;
-    padding: 10px;
-    border: 1px solid #444;
-}
+        .comment-section, .card-section {
+            background: #222;
+            padding: 10px;
+            border: 1px solid #444;
+        }
 
-.comment, .card {
-    padding: 10px;
-    border-bottom: 1px solid #333;
-}
+        .comment, .card {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+        }
 
-.comment {
-  display: flex;
-  justify-content: space-between;
+        .comment {
+            display: flex;
+            justify-content: space-between;
+        }
 
-}
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
 
-.pagination {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
-}
+        .pagination button {
+            margin-left: 5px;
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
 
-.pagination button {
-    margin-left: 5px;
-    background: #333;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-}
+        .pagination button:hover {
+            background: #555;
+        }
 
-.pagination button:hover {
-    background: #555;
-}
+        .card-section {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
 
-.card-section {
-    display: flex;
-    justify-content: space-around; /* 카드 섹션을 일정한 간격으로 배치 */
-    flex-wrap: wrap;
-}
+        .card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 300px;
+            height: 400px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.5);
+            margin: 10px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            color: #fff;
+            text-align: center;
+        }
 
-.card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 300px; /* 카드의 너비를 조정 */
-    height: 400px; /* 카드의 높이를 조정 */
-    overflow: hidden;
-    background: rgba(0, 0, 0, 0.5); /* 카드 배경을 투명하게 조정 */
-    margin: 10px;
-    padding: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-    color: #fff;
-    text-align: center;
-}
+        .card img {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 40px;
+        }
 
-.card img {
-    width: 300px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 5px;
-    margin-bottom: 40px;
-}
+        .card button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.2s;
+        }
 
-.card button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    transition: transform 0.2s;
-}
+        .card button:hover {
+            transform: scale(1.1);
+        }
 
-.card button:hover {
-    transform: scale(1.1);
-}
+        .card button img {
+            width: 24px;
+            height: 24px;
+        }
 
-.card button img {
-    width: 24px; /* 아이콘 크기 설정 */
-    height: 24px; /* 아이콘 크기 설정 */
-}
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
 
-/* 모달 스타일 */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.8);
-}
+        .modal-content {
+            background-color: #111;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 15px;
+            width: 60%;
+            max-width: 400px;
+            color: #fff;
+        }
 
-.modal-content {
-    background-color: #111;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    border-radius: 15px; /* 둥근 모서리 */
-    width: 60%;
-    max-width: 400px; /* 최대 너비 설정 */
-    color: #fff;
-}
+        .small-modal {
+            width: 40%;
+            max-width: 300px;
+        }
 
-.small-modal {
-    width: 40%;
-    max-width: 300px; /* 작은 크기 */
-}
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
-.close:hover,
-.close:focus {
-    color: #fff;
-    text-decoration: none;
-    cursor: pointer;
-}
+        .modal-content button {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
 
-.modal-content button {
-    background: #333;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    margin-top: 10px;
-}
+        .modal-content button:hover {
+            background: #555;
+        }
 
-.modal-content button:hover {
-    background: #555;
-}
-.cardDetailsLink {
-  height: 80%;
-}
+        .cardDetailsLink {
+            height: 80%;
+        }
 
-a {
-    color: white;
-}
+        a {
+            color: white;
+        }
 
-a:hover {
-    color: red;
-}
-
+        a:hover {
+            color: red;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <!-- Axios CDN 추가 -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
@@ -289,18 +285,17 @@ a:hover {
             <div id="likedCards" class="card-section">
                 <% likedCards.forEach(card => { %>
                     <div class="card" id="card-<%= card.card_id %>">
-                      <a class="cardDetailsLink" href="/detail/<%= card.card_id %>">
-                        <img src="<%= card.card_image %>" alt="<%= card.card_name %> 이미지">
-                        <%= card.card_name %>
-                      </a>
+                        <a class="cardDetailsLink" href="/detail/<%= card.card_id %>">
+                            <img src="<%= card.card_image %>" alt="<%= card.card_name %> 이미지">
+                            <%= card.card_name %>
+                        </a>
                         <button type="button" class="like-btn" data-card-id="<%= card.card_id %>">
-                          <img src="./image/like_아이콘.png" alt="like icon">
+                            <img src="./image/like_아이콘.png" alt="like icon">
                         </button>
                     </div>
                 <% }) %>
             </div>
         </section>
-
         <br><br>
     </div>
 
@@ -394,12 +389,6 @@ a:hover {
                 };
             });
 
-            renderComments(comments, currentPage);
-            setupPagination(totalComments);
-        });
-
-
-        document.addEventListener('DOMContentLoaded', () => {
             renderComments(comments, currentPage);
             setupPagination(totalComments);
         });
@@ -557,9 +546,18 @@ a:hover {
         };
 
         document.getElementById('confirmYesBtn').onclick = function() {
-            document.getElementById('confirmModal').style.display = "none";
-            document.getElementById('alertModal').style.display = "block";
-            profileDelete();//새로 추가한 부분
+            const token = getCookie('token'); // 쿠키에서 토큰 가져오기
+            axios.delete('/profile/delete', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(res => {
+                alert(res.data.message);
+                deleteCookie('token'); // 쿠키에서 토큰 삭제
+                window.location.href = '/index';
+            }).catch(error => {
+                alert('회원 탈퇴 중 오류가 발생했습니다.');
+            });
         };
 
         document.getElementById('confirmNoBtn').onclick = function() {
@@ -570,87 +568,99 @@ a:hover {
             document.getElementById('alertModal').style.display = "none";
         };
 
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null; // 쿠키가 없을 경우 null 반환
+        }
+
+        function deleteCookie(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;';
+        }
 
         function profileEdit() {
-          const form = document.forms['form_profile'];
-          const token = localStorage.getItem('token');
-    
-          axios.patch('/profile/edit', {
-            nickname: form.nickname.value
-          }, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          }).then(res => {
-            alert('회원 정보가 수정되었습니다.');
-          }).catch(error => {
-            alert('회원 정보 수정 중 오류가 발생했습니다.');
-          });
+    const token = getCookie('token'); // 쿠키에서 토큰 가져오기
+    console.log('fuckingToken', token); // 토큰이 있는지 확인
+
+    if (!token) {
+        alert('토큰이 없습니다. 다시 로그인해 주세요.');
+        return;
+    }
+
+    const form = document.forms['form_profile'];
+
+    axios.patch('/profile/edit', {
+        nickname: form.nickname.value
+    }, {
+        headers: {
+            'Authorization': `Bearer ${token}`
         }
-    
+    }).then(res => {
+        alert('회원 정보가 수정되었습니다.');
+    }).catch(error => {
+        alert('회원 정보 수정 중 오류가 발생했습니다.');
+    });
+}
+
         function profileDelete() {
-          const token = localStorage.getItem('token');
-          axios.delete('/profile/delete', {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          }).then(res => {
-            alert(res.data.message);
-            localStorage.removeItem('token');
-            window.location.href = '/user/signin';
-          }).catch(error => {
-            alert('회원 탈퇴 중 오류가 발생했습니다.');
-          });
+            const token = getCookie('token'); // 쿠키에서 토큰 가져오기
+            axios.delete('/profile/delete', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(res => {
+                alert(res.data.message);
+                deleteCookie('token'); // 쿠키에서 토큰 삭제
+                window.location.href = '/user/signin';
+            }).catch(error => {
+                alert('회원 탈퇴 중 오류가 발생했습니다.');
+            });
         }
-    
+
         function deleteComment(commentId) {
-          const token = localStorage.getItem('token');
-          axios.delete(`/profile/comments/${commentId}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          }).then(res => {
-            alert(res.data.message);
-            location.reload();
-          }).catch(error => {
-            alert('댓글 삭제 중 오류가 발생했습니다.');
-          });
+            const token = getCookie('token'); // 쿠키에서 토큰 가져오기
+            axios.delete(`/profile/comments/${commentId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(res => {
+                alert(res.data.message);
+                location.reload();
+            }).catch(error => {
+                alert('댓글 삭제 중 오류가 발생했습니다.');
+            });
         }
-    
+
         function unlikeCard(cardId, button) {
-          const token = localStorage.getItem('token');
-          axios.delete(`/profile/cards/unlike/${cardId}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          }).then(res => {
-            alert(res.data.message);
-            location.reload();
-          }).catch(error => {
-            alert('좋아요 취소 중 오류가 발생했습니다.');
-          });
+            const token = getCookie('token'); // 쿠키에서 토큰 가져오기
+            axios.delete(`/profile/cards/unlike/${cardId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(res => {
+                alert(res.data.message);
+                location.reload();
+            }).catch(error => {
+                alert('좋아요 취소 중 오류가 발생했습니다.');
+            });
         }
-    
+
         function logout() {
-          const token = localStorage.getItem('token');
-          axios.post('/user/logout', {}, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          }).then(res => {
-            alert(res.data.message);
-            localStorage.removeItem('token');
-            window.location.href = '/index';
-          }).catch(error => {
-            alert('로그아웃 중 오류가 발생했습니다.');
-          });
+            const token = getCookie('token'); // 쿠키에서 토큰 가져오기
+            console.log('fuckingToken',token);
+            axios.post('/user/logout', {}, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(res => {
+                alert(res.data.message);
+                deleteCookie('token'); // 쿠키에서 토큰 삭제
+                window.location.href = '/index';
+            }).catch(error => {
+                alert('로그아웃 중 오류가 발생했습니다.');
+            });
         }
-
-        ocument.addEventListener('DOMContentLoaded', () => {
-            renderComments(comments, currentPage);
-            setupPagination(totalComments);
-        });
-
     </script>
 </body>
 </html>
