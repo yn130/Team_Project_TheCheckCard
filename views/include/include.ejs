@@ -1,13 +1,46 @@
-<!-- views/include/include.ejs -->
+<!DOCTYPE html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+
+    body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .logo-container {
+      position: absolute;
+      top: 10px; /* 화면 위에서의 위치를 조정하세요 */
+      left: 10px; /* 화면 왼쪽에서의 위치를 조정하세요 */
+      z-index: 1000; /* 로고가 다른 요소들 위에 표시되도록 z-index를 높게 설정 */
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .logo-container img {
+      max-width: 50px; /* 필요에 따라 크기를 조정하세요 */
+      height: auto;
+    }
+  </style>
 </head>
 <body>
-  <!-- 로그인 버튼과 관련된 섹션 제거 -->
+  <!-- <header>
+    <div class="logo-container">
+      <a href="/">
+      <i src="../images/logo2.gif" alt="The Check Card Logo"> -->
+
+          <!-- <video src="../images/logo2.mp4"></video>
+      </a>
+    </div>
+  </header>  -->
+
   <script>
       function checkLoginStatus() {
           fetch('/user/checkLoginStatus')
@@ -26,3 +59,4 @@
       });
   </script>
 </body>
+</html>

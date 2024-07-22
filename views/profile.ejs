@@ -5,234 +5,245 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>마이 페이지</title>
     <style>
-        /* 기존 CSS 그대로 유지 */
-        #particles-js {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            background-size: cover;
-            background-position: 50% 50%;
-            z-index: -1;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #000;
-            color: #fff;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            width: 80%;
-            margin: auto;
-            background: #111;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-        }
-
-        .header-top {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 10px;
-        }
-
-        header {
-            border-bottom: 1px solid #444;
-            padding-bottom: 10px;
-        }
-
-        .profile {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .nickname-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .nickname-container span {
-            margin-right: 10px;
-        }
-
-        #nicknameDisplay {
-            font-weight: bold;
-            font-size: 1.5em; /* 유저 닉네임만 크기 크게 설정 */
-            margin-right: 10px; /* 닉네임과 수정 버튼 사이의 간격 설정 */
-        }
-
-        .profile button, .header-top button {
-            background: #333;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .icon-button {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-        }
-
-        .icon-button img {
-            width: 24px;
-            height: 24px;
-        }
-
-        .profile .right {
-            margin-left: auto;
-        }
-
-        section {
-            margin-top: 20px;
-        }
-
-        .comment-section, .card-section {
-            background: #222;
-            padding: 10px;
-            border: 1px solid #444;
-        }
-
-        .comment, .card {
-            padding: 10px;
-            border-bottom: 1px solid #333;
-        }
-
-        .comment {
-          display: flex;
-          justify-content: space-between;
         
-        }
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    background-size: cover;
+    background-position: 50% 50%;
+    z-index: -1;
+}
 
-        .pagination {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 10px;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
 
-        .pagination button {
-            margin-left: 5px;
-            background: #333;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
+.container {
+    position: relative;
+    z-index: 1;
+    width: 80%;
+    margin: auto;
+    background: #111;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
 
-        .pagination button:hover {
-            background: #555;
-        }
+.header-top {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
 
-        .card-section {
-            display: flex; /* 카드 섹션을 가로로 배치 */
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
+header {
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
 
-        .card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 300px; /* 카드의 너비를 조정 */
-            height: 400px; /* 카드의 높이를 조정 */
-            overflow: hidden;
-            background: #333;
-            margin: 10px;
-            padding: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            color: #fff;
-            text-align: center;
-        }
+.profile {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
 
-        .card img {
-            width: 300px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 5px;
-            margin-bottom: 40px;
-        }
+.nickname-container {
+    display: flex;
+    align-items: center;
+}
 
-        .card button {
-            background: #444;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background 0.3s;
-            /* margin-top: 20px; */
-        }
+.nickname-container span {
+    margin-right: 10px;
+}
 
-        .card button:hover {
-            background: #555;
-        }
+#nicknameDisplay {
+    font-weight: bold;
+    font-size: 1.5em; /* 유저 닉네임만 크기 크게 설정 */
+    margin-right: 10px; /* 닉네임과 수정 버튼 사이의 간격 설정 */
+}
 
-        /* 모달 스타일 */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.8);
-        }
+.profile button, .header-top button {
+    background: #333;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
 
-        .modal-content {
-            background-color: #111;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            border-radius: 15px; /* 둥근 모서리 */
-            width: 60%;
-            max-width: 400px; /* 최대 너비 설정 */
-            color: #fff;
-        }
+.icon-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
 
-        .small-modal {
-            width: 40%;
-            max-width: 300px; /* 작은 크기 */
-        }
+.icon-button img {
+    width: 24px;
+    height: 24px;
+}
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
+.profile .right {
+    margin-left: auto;
+}
 
-        .close:hover,
-        .close:focus {
-            color: #fff;
-            text-decoration: none;
-            cursor: pointer;
-        }
+section {
+    margin-top: 20px;
+}
 
-        .modal-content button {
-            background: #333;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+.comment-section, .card-section {
+    background: #222;
+    padding: 10px;
+    border: 1px solid #444;
+}
 
-        .modal-content button:hover {
-            background: #555;
-        }
-        .cardDetailsLink {
-          height: 80%;
-        }
+.comment, .card {
+    padding: 10px;
+    border-bottom: 1px solid #333;
+}
+
+.comment {
+  display: flex;
+  justify-content: space-between;
+
+}
+
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.pagination button {
+    margin-left: 5px;
+    background: #333;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.pagination button:hover {
+    background: #555;
+}
+
+.card-section {
+    display: flex;
+    justify-content: space-around; /* 카드 섹션을 일정한 간격으로 배치 */
+    flex-wrap: wrap;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px; /* 카드의 너비를 조정 */
+    height: 400px; /* 카드의 높이를 조정 */
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.5); /* 카드 배경을 투명하게 조정 */
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    color: #fff;
+    text-align: center;
+}
+
+.card img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 40px;
+}
+
+.card button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s;
+}
+
+.card button:hover {
+    transform: scale(1.1);
+}
+
+.card button img {
+    width: 24px; /* 아이콘 크기 설정 */
+    height: 24px; /* 아이콘 크기 설정 */
+}
+
+/* 모달 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    background-color: #111;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 15px; /* 둥근 모서리 */
+    width: 60%;
+    max-width: 400px; /* 최대 너비 설정 */
+    color: #fff;
+}
+
+.small-modal {
+    width: 40%;
+    max-width: 300px; /* 작은 크기 */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-content button {
+    background: #333;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.modal-content button:hover {
+    background: #555;
+}
+.cardDetailsLink {
+  height: 80%;
+}
+
+a {
+    color: white;
+}
+
+a:hover {
+    color: red;
+}
+
     </style>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <!-- Axios CDN 추가 -->
@@ -243,6 +254,7 @@
     <div class="container">
         <header>
             <div class="header-top">
+                <button type="button" class="logout-button" onclick="logout();">Logout</button>
                 <button id="deleteAccountBtn">회원탈퇴</button>
             </div>
             <h1>마이 페이지🧑</h1>
@@ -276,19 +288,20 @@
             <h2>내가 좋아요한 카드💳✨</h2>
             <div id="likedCards" class="card-section">
                 <% likedCards.forEach(card => { %>
-                    <div class="card">
+                    <div class="card" id="card-<%= card.card_id %>">
                       <a class="cardDetailsLink" href="/detail/<%= card.card_id %>">
                         <img src="<%= card.card_image %>" alt="<%= card.card_name %> 이미지">
                         <%= card.card_name %>
                       </a>
-                        <button type="button" onclick="unlikeCard(<%= card.card_id %>);">좋아요 취소</button>
+                        <button type="button" class="like-btn" data-card-id="<%= card.card_id %>">
+                          <img src="./image/like_아이콘.png" alt="like icon">
+                        </button>
                     </div>
                 <% }) %>
             </div>
         </section>
 
         <br><br>
-        <button type="button" class="logout-button" onclick="logout();">Logout</button>
     </div>
 
     <!-- 닉네임 수정 모달 -->
@@ -362,6 +375,29 @@
                 }
             };
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const likeButtons = document.querySelectorAll('.like-btn');
+
+            likeButtons.forEach(button => {
+                button.onclick = function() {
+                    const cardId = button.getAttribute('data-card-id');
+                    unlikeCard(cardId, button);
+                };
+
+                button.onmouseover = function() {
+                    button.querySelector('img').src = './image/unlike_아이콘.png';
+                };
+
+                button.onmouseout = function() {
+                    button.querySelector('img').src = './image/like_아이콘.png';
+                };
+            });
+
+            renderComments(comments, currentPage);
+            setupPagination(totalComments);
+        });
+
 
         document.addEventListener('DOMContentLoaded', () => {
             renderComments(comments, currentPage);
@@ -533,6 +569,7 @@
             document.getElementById('alertModal').style.display = "none";
         };
 
+
         function profileEdit() {
           const form = document.forms['form_profile'];
           const token = localStorage.getItem('token');
@@ -579,7 +616,7 @@
           });
         }
     
-        function unlikeCard(cardId) {
+        function unlikeCard(cardId, button) {
           const token = localStorage.getItem('token');
           axios.delete(`/profile/cards/unlike/${cardId}`, {
             headers: {
@@ -602,16 +639,17 @@
           }).then(res => {
             alert(res.data.message);
             localStorage.removeItem('token');
-            window.location.href = '/user/signin';
+            window.location.href = '/index';
           }).catch(error => {
             alert('로그아웃 중 오류가 발생했습니다.');
           });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        ocument.addEventListener('DOMContentLoaded', () => {
             renderComments(comments, currentPage);
             setupPagination(totalComments);
         });
+
     </script>
 </body>
 </html>
