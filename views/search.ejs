@@ -263,6 +263,19 @@
                 </div>
             <% }); %>
         </div>
+        <!-- 페이지 네이션 추가 -->
+        <div class="pagination">
+            <% if (currentPage > 1) { %>
+                <a href="?query=<%= query %>&page=<%= currentPage - 1 %>&pageSize=<%= pageSize %>">Previous</a>
+            <% } %>
+            <% for (let i = 1; i <= totalPages; i++) { %>
+                <a href="?query=<%= query %>&page=<%= i %>&pageSize=<%= pageSize %>" <%= i === currentPage ? 'class="active"' : '' %>><%= i %></a>
+            <% } %>
+            <% if (currentPage < totalPages) { %>
+                <a href="?query=<%= query %>&page=<%= currentPage + 1 %>&pageSize=<%= pageSize %>">Next</a>
+            <% } %>
+        </div>
+        <!-- 페이지 네이션 추가 주석부터 여기까지 지우면 됨. -->
     </main>
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
