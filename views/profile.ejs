@@ -522,10 +522,11 @@
         });
 
         document.getElementById('saveNicknameBtn').onclick = function() {
-            var newNickname = document.getElementById('newNickname').value;
+            let newNickname = document.getElementById('newNickname').value;
             if (newNickname) {
                 document.getElementById('nicknameDisplay').innerText = newNickname;
                 document.getElementById('nicknameModal').style.display = "none";
+                profileEdit(newNickname);
             }
         };
 
@@ -546,15 +547,13 @@
         };
 
         document.getElementById('confirmYesBtn').onclick = function() {
-            const token = getCookie('token'); // 쿠키에서 토큰 가져오기
             axios.delete('/profile/delete', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                withCredentials: true // 쿠키를 포함하도록 설정
             }).then(res => {
                 alert(res.data.message);
                 deleteCookie('token'); // 쿠키에서 토큰 삭제
-                window.location.href = '/index';
+                // window.location.href = '/index';
+                window.location.replace('/index'); // location.replace를 사용하여 페이지 새로고침
             }).catch(error => {
                 alert('회원 탈퇴 중 오류가 발생했습니다.');
             });
@@ -579,51 +578,23 @@
             document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;';
         }
 
-        function profileEdit() {
-    const token = getCookie('token'); // 쿠키에서 토큰 가져오기
-    console.log('fuckingToken', token); // 토큰이 있는지 확인
-
-    if (!token) {
-        alert('토큰이 없습니다. 다시 로그인해 주세요.');
-        return;
-    }
-
-    const form = document.forms['form_profile'];
-
-    axios.patch('/profile/edit', {
-        nickname: form.nickname.value
-    }, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    }).then(res => {
-        alert('회원 정보가 수정되었습니다.');
-    }).catch(error => {
-        alert('회원 정보 수정 중 오류가 발생했습니다.');
-    });
-}
-
-        function profileDelete() {
-            const token = getCookie('token'); // 쿠키에서 토큰 가져오기
-            axios.delete('/profile/delete', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+        function profileEdit(newNickname) {
+            axios.patch('/profile/edit', {
+                nickname: newNickname
+            }, { 
+                withCredentials: true
             }).then(res => {
-                alert(res.data.message);
-                deleteCookie('token'); // 쿠키에서 토큰 삭제
-                window.location.href = '/user/signin';
+                alert('회원 정보가 수정되었습니다.');
+                document.getElementById('nicknameDisplay').innerText = newNickname;
             }).catch(error => {
-                alert('회원 탈퇴 중 오류가 발생했습니다.');
+                console.error('Error:', error); // 로그 추가
+                alert('회원 정보 수정 중 오류가 발생했습니다.');
             });
         }
 
         function deleteComment(commentId) {
-            const token = getCookie('token'); // 쿠키에서 토큰 가져오기
             axios.delete(`/profile/comments/${commentId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                withCredentials: true 
             }).then(res => {
                 alert(res.data.message);
                 location.reload();
@@ -633,11 +604,8 @@
         }
 
         function unlikeCard(cardId, button) {
-            const token = getCookie('token'); // 쿠키에서 토큰 가져오기
             axios.delete(`/profile/cards/unlike/${cardId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                withCredentials: true 
             }).then(res => {
                 alert(res.data.message);
                 location.reload();
@@ -647,12 +615,8 @@
         }
 
         function logout() {
-            const token = getCookie('token'); // 쿠키에서 토큰 가져오기
-            console.log('fuckingToken',token);
             axios.post('/user/logout', {}, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                withCredentials: true // 쿠키를 포함하도록 설정
             }).then(res => {
                 alert(res.data.message);
                 deleteCookie('token'); // 쿠키에서 토큰 삭제
