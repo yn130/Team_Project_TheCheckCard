@@ -44,7 +44,7 @@ const fetchTopComments = async (cardId, limit = 2) => {
 };
 
 // 나머지 댓글 리스트 조회
-const fetchComments = async (cardId, limit, offset, excludeIds = []) => {
+const fetchComments = async (cardId, offset, excludeIds = []) => {
   try {
     const comments = await Comment.findAll({
       where: {
@@ -89,8 +89,8 @@ const getComments = async (cardId, page = 1, limit = 5) => {
   const topCommentIds = topComments.map(comment => comment.comment_id);
 
   // 나머지 댓글 최신순으로 조회, 상위 2개의 댓글 제외
-  const comments = await fetchComments(cardId, limit, offset, topCommentIds);
-  const totalPages = Math.ceil(totalComments / limit);
+  const comments = await fetchComments(cardId, offset, topCommentIds);
+  const totalPages = Math.ceil(totalComments/limit);
 
   // 상위 2개의 댓글을 앞에 추가
   const mergedComments = [...topComments, ...comments];
@@ -102,7 +102,7 @@ const getComments = async (cardId, page = 1, limit = 5) => {
   };
 };
 
-// 댓글 보여주기
+
 exports.showComments = async (req, res) => {
   const cardId = req.query.card_id;
   const page = parseInt(req.query.page) || 1;
@@ -111,7 +111,6 @@ exports.showComments = async (req, res) => {
     const { comments, totalPages, currentPage } = await getComments(cardId, page);
 
     if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-      // AJAX 요청이거나 JSON 응답을 요구하는 경우
       return res.json({
         comments,
         totalPages,
@@ -212,7 +211,7 @@ exports.toggleLike = async (req, res) => {
     return res.status(401).json({ message: '로그인이 필요합니다. ' });
   }
 
-  const { comment_id, card_id } = req.body; // card_id 추가
+  const { comment_id, card_id } = req.body; 
   const user_id = req.user.userId;
   const transaction = await sequelize.transaction();
 
