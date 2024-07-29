@@ -57,7 +57,7 @@
 
 ### ⚡️ Collaboration
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=Jira&logoColor=white"/><img src="https://img.shields.io/badge/Github-181717?style=flat&logo=Github&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=Mysql&logoColor=white"/><img src="https://img.shields.io/badge/JQuery-0769AD?style=flat&logo=Jquery&logoColor=white"/>
-<br><img src="https://img.shields.io/badge/HTML-E34F26?style=flat&logo=HTML5&logoColor=white"/> <img src="https://img.shields.io/badge/CSS-1572B6?style=flat&logo=Css3&logoColor=white"/><img src="https://img.shields.io/badge/Notin-000000?style=flat&logo=Notion&logoColor=white"/><img src="https://img.shields.io/badge/Slack-4A154B?style=flat&logo=Slack&logoColor=white"/>
+<br> <img src="https://img.shields.io/badge/ejs-1572B6?style=flat&logo=ejs&logoColor=white"/><img src="https://img.shields.io/badge/Notin-000000?style=flat&logo=Notion&logoColor=white"/><img src="https://img.shields.io/badge/Slack-4A154B?style=flat&logo=Slack&logoColor=white"/>
 <img src="https://img.shields.io/badge/Node.js-5FA04E?style=flat&logo=Node.js&logoColor=white"/> <img src="https://img.shields.io/badge/JWT-000000?style=flat&logo=JSONWebTokens&logoColor=white"/> 
 
 <br><br>
